@@ -2,6 +2,7 @@
 
 namespace App\Domain\User;
 
+use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
@@ -30,7 +31,7 @@ class User extends UserRegular
     public function debit(Amount $amount): void
     {
         if($this->balance() < $amount->toFloat()) {
-            throw new \Exception('Insufficient funds');
+            throw new InsuficientFundsException('Insufficient funds');
         }
         $this->wallet->subtract($amount);
     }

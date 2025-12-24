@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Application\TranferMoney;
+use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\User\User;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Document;
@@ -71,7 +72,8 @@ class TransferMoneyTest extends TestCase
             type: UserType::REGULAR
         );
         $useCase = new TranferMoney();
-
+        $this->expectException(InsuficientFundsException::class);
+        $this->expectExceptionMessage('Insufficient funds');
         // WHEN
         $useCase->execute(
             payer: $payer,
