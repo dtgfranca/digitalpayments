@@ -6,6 +6,7 @@ use App\Application\TranferMoney;
 use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\Exceptions\TransferNotAllowedException;
 use App\Domain\Transfer\AuthorizerInterface;
+use App\Domain\Transfer\NotifyerInterface;
 use App\Domain\User\User;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Document;
@@ -41,7 +42,10 @@ class TransferMoneyTest extends TestCase
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
         });
-        $useCase = new TranferMoney($authorizerMock);
+        $notifiedMock = \Mockery::mock(NotifyerInterface::class, function ($mock) {
+            $mock->shouldReceive('notify')->once()->andReturn();
+        });
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
 
         // WHEN
         $useCase->execute(
@@ -50,8 +54,8 @@ class TransferMoneyTest extends TestCase
             amount: new Amount(10000)
         );
         // THEN
-        $this->assertEquals(100.0, $payer->balance());
-        $this->assertEquals(150.0, $payee->balance());
+        $this->assertEquals(100.0, $payer->wallet()->balance());
+        $this->assertEquals(150.0, $payee->wallet()->balance());
 
     }
 
@@ -187,8 +191,8 @@ class TransferMoneyTest extends TestCase
             wallet: new Wallet(amount: new Amount(10000)),
             type: UserType::REGULAR
         );
-        $notifiedMock = \Mockery::mock('App\Application\NotifyTransfer', function ($mock) {
-            $mock->shouldReceive('notify')->once();
+        $notifiedMock = \Mockery::mock(NotifyerInterface::class, function ($mock) {
+            $mock->shouldReceive('notify')->once()->andReturn();
         });
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
@@ -204,6 +208,50 @@ class TransferMoneyTest extends TestCase
         // THEN
         $this->assertEquals(100.0, $payer->balance());
         $this->assertEquals(200.0, $payee->balance());
+    }
+
+    public function test_should_make_rollback_when_transaction_failed(): void
+    {
+        // GIVEN
+        $payer = new User(
+            uuid: new Password(4),
+            fullname: 'Diego franca',
+            document: new Document('07634403694'),
+            email: new Email('diego.tg.franca@gmail.com'),
+            wallet: new Wallet(amount: new Amount(20000)),
+            type: UserType::REGULAR
+        );
+
+
+        $payee = new User(
+            uuid: new Password(4),
+            fullname: 'Diego franca',
+            document: new Document('07634403694'),
+            email: new Email('diego.tg.franca@gmail.com'),
+            wallet: new Wallet(amount: new Amount(10000)),
+            type: UserType::REGULAR
+        );
+        $notifiedMock = \Mockery::mock(NotifyerInterface::class, function ($mock) {
+            $mock->shouldReceive('notify')->andThrow(new \Exception('Notification service down'));
+        });
+        $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
+            $mock->shouldReceive('authorize')->andReturn(true);
+        });
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
+
+        // WHEN
+        $useCase->execute(
+            payer: $payer,
+            payee: $payee,
+            amount: new Amount(10000)
+        );
+        // THEN
+        $this->assertEquals(200.0, $payer->wallet()->balance());
+        $this->assertEquals(100.0, $payee->wallet()->balance());
+    }
+    public function tearDown(): void
+    {
+        \Mockery::close();
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Wallet;
 
+use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\ValueObjects\Amount;
 
 final class Wallet
@@ -15,13 +16,38 @@ final class Wallet
     {
         return $this->balance;
     }
-    public function subtract(Amount $amount):void
+    private function subtract(Amount $amount):void
     {
        $this->balance =  $this->amount->toFloat() - $amount->toFloat();
+
     }
-    public function add(Amount $amount):void
+    private function add(Amount $amount):void
     {
         $this->balance = $this->amount->toFloat() + $amount->toFloat();
+
+    }
+    public function debit(Amount $amount): void
+    {
+
+        if($this->balance < $amount->toFloat()) {
+            throw new InsuficientFundsException('Insufficient funds');
+        }
+        $this->subtract($amount);
+    }
+    public function credit(Amount $amount): void
+    {
+       $this->add($amount);
+    }
+    public function createMemento(): WalletMemento
+    {
+
+        return new WalletMemento(
+            new Amount($this->balance)
+        );
+    }
+    public function restore(WalletMemento $memento): void
+    {
+        $this->balance = $memento->balance()->value();
     }
 
 

@@ -28,17 +28,6 @@ class User extends UserRegular
 
         return $this->wallet->balance();
     }
-    public function debit(Amount $amount): void
-    {
-        if($this->balance() < $amount->toFloat()) {
-            throw new InsuficientFundsException('Insufficient funds');
-        }
-        $this->wallet->subtract($amount);
-    }
-    public function credit(Amount $amount): void
-    {
-         $this->wallet->add($amount);
-    }
     public function getTypeUser(): string
     {
         return $this->type->value;
@@ -47,5 +36,8 @@ class User extends UserRegular
     {
         return $this->getTypeUser() !== UserType::MERCHANT->value;
     }
-
+    public function wallet(): Wallet
+    {
+        return $this->wallet;
+    }
 }

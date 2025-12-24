@@ -16,11 +16,9 @@ class Transfer
 
     public function commit(): void
     {
-        $this->payer->debit($this->amount);
-        $this->payee->credit($this->amount);
+        $this->payer->wallet()->debit($this->amount);
+        $this->payee->wallet()->credit($this->amount);
 
     }
 
-    public function rollback(): void
-    {}
 }
