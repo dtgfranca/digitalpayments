@@ -58,4 +58,15 @@ class User extends UserRegular
     {
         return $this->wallet;
     }
+    public function toArray(): array
+    {
+        return [
+            'uuid' => $this->uuid,
+            'fullname' => $this->fullname,
+            'document' => $this->document,
+            'email' => $this->email,
+            'balance' => $this->balance(),
+            'type' => $this->getTypeUser()
+        ];
+    }
 }
