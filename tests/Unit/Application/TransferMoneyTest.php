@@ -262,6 +262,7 @@ class TransferMoneyTest extends TestCase
             $mock->shouldReceive('authorize')->andReturn(true);
         });
         $useCase = new TranferMoney($authorizerMock, $notifiedMock, $transferMock, $transactionManager);
+        //THEN
         $this->expectException(ProcessTransferFailedException::class);
         $this->expectExceptionMessage('Error processing transfer');
         $this->assertEquals(200.0, $payer->wallet()->balance());
@@ -272,7 +273,6 @@ class TransferMoneyTest extends TestCase
             payee: $payee,
             amount: new Amount(10000)
         );
-        // THEN
 
     }
     public function tearDown(): void
