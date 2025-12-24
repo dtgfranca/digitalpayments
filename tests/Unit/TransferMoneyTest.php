@@ -166,7 +166,7 @@ class TransferMoneyTest extends TestCase
         );
 
     }
-    public function test_should_make_rollback_when_transaction_failed(): void
+    public function test_should_sent_notify_when_transaction_was_succed(): void
     {
         // GIVEN
         $payer = new User(
@@ -187,10 +187,13 @@ class TransferMoneyTest extends TestCase
             wallet: new Wallet(amount: new Amount(10000)),
             type: UserType::REGULAR
         );
+        $notifiedMock = \Mockery::mock('App\Application\NotifyTransfer', function ($mock) {
+            $mock->shouldReceive('notify')->once();
+        });
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
         });
-        $useCase = new TranferMoney($authorizerMock);
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
 
         // WHEN
         $useCase->execute(
