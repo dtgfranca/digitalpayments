@@ -83,7 +83,8 @@ class TransferMoneyTest extends TestCase
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
         });
-        $useCase = new TranferMoney($authorizerMock);
+        $notifiedMock = \Mockery::mock(NotifyerInterface::class);
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
 
         // WHEN
         $this->expectException(InsuficientFundsException::class);
@@ -120,7 +121,8 @@ class TransferMoneyTest extends TestCase
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
         });
-        $useCase = new TranferMoney($authorizerMock);
+        $notifiedMock = \Mockery::mock(NotifyerInterface::class);
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
 
         // WHEN
         $this->expectException(TransferNotAllowedException::class);
@@ -157,8 +159,11 @@ class TransferMoneyTest extends TestCase
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(false);
         });
+        $notifiedMock = \Mockery::mock(NotifyerInterface::class);
 
-        $useCase = new TranferMoney($authorizerMock);
+        // WHEN
+
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock);;
 
         // WHEN
         $this->expectException(TransferNotAllowedException::class);
