@@ -41,6 +41,36 @@ class User extends UserRegular
         );
     }
 
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
+    }
+
+    public function getFullname(): string
+    {
+        return $this->fullname;
+    }
+
+    public function getEmail(): Email
+    {
+        return $this->email;
+    }
+
+    public function getDocument(): Cpf
+    {
+        return $this->document;
+    }
+
+    public function getWallet(): Wallet
+    {
+        return $this->wallet;
+    }
+
+    public function getType(): UserType
+    {
+        return $this->type;
+    }
+
     public function balance(): float
     {
 

@@ -2,6 +2,7 @@
 
 namespace App\Application;
 
+use App\Application\DTO\TransferOutputDTO;
 use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\Exceptions\ProcessTransferFailedException;
 use App\Domain\Exceptions\TransferNotAllowedException;
@@ -14,7 +15,7 @@ use App\Domain\User\User;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\UserType;
 
-class TranferMoney
+class TransferMoney
 {
     public function __construct(
         private readonly AuthorizerInterface $authorizer,
@@ -38,13 +39,13 @@ class TranferMoney
         $payeeMemento = $payee->wallet()->createMemento();
         $this->transactionManger->begin();
         try{
-            $transfer = new Transfer(
+            $transfer = Transfer::create(
                 payer: $payer,
                 payee: $payee,
                 amount: $amount,
             );
             $transfer->commit();
-            $this->transferRepository->save([]);
+            $this->transferRepository->save(TransferOutputDTO::fromTransfer($transfer)->toArray());
             $this->notifyer->notify($payee);
             $this->transactionManger->commit();
         }catch (InsuficientFundsException $e){
@@ -53,9 +54,9 @@ class TranferMoney
         }
         catch (\Throwable $e){
             $this->transactionManger->rollback();
-          $payer->wallet()->restore($payerMemento);
-          $payee->wallet()->restore($payeeMemento);
-          throw new ProcessTransferFailedException('Error processing transfer');
+            $payer->wallet()->restore($payerMemento);
+            $payee->wallet()->restore($payeeMemento);
+            throw new ProcessTransferFailedException('Error processing transfer');
         }
 
 
