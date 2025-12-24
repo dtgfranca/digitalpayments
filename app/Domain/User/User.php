@@ -61,12 +61,12 @@ class User extends UserRegular
     public function toArray(): array
     {
         return [
-            'uuid' => $this->uuid,
+            'id'       => $this->uuid->value(),
             'fullname' => $this->fullname,
-            'document' => $this->document,
-            'email' => $this->email,
-            'balance' => $this->balance(),
-            'type' => $this->getTypeUser()
+            'email'    => $this->email->value(),
+            'document' => $this->document->value(),
+            'type'     => $this->type->value,
+            'balance'  => $this->wallet->balance(),
         ];
     }
 }

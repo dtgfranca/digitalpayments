@@ -4,6 +4,7 @@ namespace Tests\Unit\Domain;
 
 use App\Application\CreateUser;
 use App\Domain\User\User;
+use App\Domain\User\UserRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
@@ -27,17 +28,18 @@ class CreateUserTest extends TestCase
     {
         //GIVEN
         $user  = User::create(
-        fullname: 'Diego franca',
-        document: new Cpf('34067941064'),
-        email: new Email('diego.tg.franca@gmail.com'),
-        wallet: new Wallet(amount: new Amount(10000)),
-        type: UserType::REGULAR
-    );
+            fullname: 'Diego franca',
+            document: new Cpf('34067941064'),
+            email: new Email('diego.tg.franca@gmail.com'),
+            wallet: new Wallet(amount: new Amount(10000)),
+            type: UserType::REGULAR
+        );
         //WHEN
-        $this->repositoryMock->shouldReceive('findByEmail')->once()->andReturnNull();
-        $this->repositoryMock->shouldReceive('findByCPF')->once()->andReturnNull();
-        $this->repositoryMock->shouldReceive('save')->once()->andReturn($user);
-        $response = $this->useCase->execute($user->toArray());
+        $data = $user->toArray();
+        $this->repositoryMock->shouldReceive('findByEmail')->once()->with($data['email'])->andReturnNull();
+        $this->repositoryMock->shouldReceive('findByCPF')->once()->with($data['document'])->andReturnNull();
+        $this->repositoryMock->shouldReceive('save')->once()->with($data)->andReturn($user);
+        $response = $this->useCase->execute($data);
         //THEN
         $this->assertNull($response);
     }
