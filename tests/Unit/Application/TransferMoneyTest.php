@@ -4,9 +4,13 @@ namespace Tests\Unit\Application;
 
 use App\Application\TranferMoney;
 use App\Domain\Exceptions\InsuficientFundsException;
+use App\Domain\Exceptions\ProcessTransferFailedException;
 use App\Domain\Exceptions\TransferNotAllowedException;
 use App\Domain\Transfer\AuthorizerInterface;
 use App\Domain\Transfer\NotifyerInterface;
+use App\Domain\Transfer\TransactionMangerInterface;
+use App\Domain\Transfer\Transfer;
+use App\Domain\Transfer\TransferRepositoryInterface;
 use App\Domain\User\User;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
@@ -37,13 +41,20 @@ class TransferMoneyTest extends TestCase
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
         );
+        $transactionManager =  \Mockery::mock(TransactionMangerInterface::class, function ($mock) {
+            $mock->shouldReceive('begin')->once();
+            $mock->shouldReceive('commit')->once();
+        });
+        $transferRepositoryMock = \Mockery::mock(TransferRepositoryInterface::class, function ($mock) {
+            $mock->shouldReceive('save')->once();
+        });
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
         });
         $notifiedMock = \Mockery::mock(NotifyerInterface::class, function ($mock) {
             $mock->shouldReceive('notify')->once()->andReturn();
         });
-        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock,$transferRepositoryMock,  $transactionManager);
 
         // WHEN
         $useCase->execute(
@@ -76,11 +87,16 @@ class TransferMoneyTest extends TestCase
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
         );
+        $transactionManager =  \Mockery::mock(TransactionMangerInterface::class, function ($mock) {
+            $mock->shouldReceive('begin')->once();
+            $mock->shouldReceive('rollback')->once();
+        });
+        $transferRepositoryMock = \Mockery::mock(TransferRepositoryInterface::class);
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
         });
         $notifiedMock = \Mockery::mock(NotifyerInterface::class);
-        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock, $transferRepositoryMock, $transactionManager );
 
         // WHEN
         $this->expectException(InsuficientFundsException::class);
@@ -112,11 +128,13 @@ class TransferMoneyTest extends TestCase
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
         );
+        $transactionManager =  \Mockery::mock(TransactionMangerInterface::class);
+        $transferRepositoryMock = \Mockery::mock(TransferRepositoryInterface::class);
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
         });
         $notifiedMock = \Mockery::mock(NotifyerInterface::class);
-        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock, $transferRepositoryMock, $transactionManager);
 
         // WHEN
         $this->expectException(TransferNotAllowedException::class);
@@ -147,7 +165,8 @@ class TransferMoneyTest extends TestCase
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
         );
-
+        $transactionManager =  \Mockery::mock(TransactionMangerInterface::class);
+        $transferRepositoryMock = \Mockery::mock(TransferRepositoryInterface::class);
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(false);
         });
@@ -155,7 +174,7 @@ class TransferMoneyTest extends TestCase
 
         // WHEN
 
-        $useCase = new TranferMoney($authorizerMock, $notifiedMock);;
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock, $transferRepositoryMock, $transactionManager);
 
         // WHEN
         $this->expectException(TransferNotAllowedException::class);
@@ -186,13 +205,20 @@ class TransferMoneyTest extends TestCase
             wallet: new Wallet(amount: new Amount(10000)),
             type: UserType::REGULAR
         );
+        $transferRepositoryMock = \Mockery::mock(TransferRepositoryInterface::class, function ($mock) {
+            $mock->shouldReceive('save')->once();
+        });
+        $transactionManager =  \Mockery::mock(TransactionMangerInterface::class, function ($mock) {
+            $mock->shouldReceive('begin')->once();
+            $mock->shouldReceive('commit')->once();
+        });
         $notifiedMock = \Mockery::mock(NotifyerInterface::class, function ($mock) {
             $mock->shouldReceive('notify')->once()->andReturn();
         });
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
         });
-        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock, $transferRepositoryMock, $transactionManager);
 
         // WHEN
         $useCase->execute(
@@ -227,11 +253,19 @@ class TransferMoneyTest extends TestCase
         $notifiedMock = \Mockery::mock(NotifyerInterface::class, function ($mock) {
             $mock->shouldReceive('notify')->andThrow(new \Exception('Notification service down'));
         });
+        $transferMock =  \Mockery::mock(TransferRepositoryInterface::class);
+        $transactionManager =  \Mockery::mock(TransactionMangerInterface::class, function ($mock) {
+            $mock->shouldReceive('begin')->once();
+            $mock->shouldReceive('rollback')->once();
+        });
         $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
             $mock->shouldReceive('authorize')->andReturn(true);
         });
-        $useCase = new TranferMoney($authorizerMock, $notifiedMock);
-
+        $useCase = new TranferMoney($authorizerMock, $notifiedMock, $transferMock, $transactionManager);
+        $this->expectException(ProcessTransferFailedException::class);
+        $this->expectExceptionMessage('Error processing transfer');
+        $this->assertEquals(200.0, $payer->wallet()->balance());
+        $this->assertEquals(100.0, $payee->wallet()->balance());
         // WHEN
         $useCase->execute(
             payer: $payer,
@@ -239,8 +273,7 @@ class TransferMoneyTest extends TestCase
             amount: new Amount(10000)
         );
         // THEN
-        $this->assertEquals(200.0, $payer->wallet()->balance());
-        $this->assertEquals(100.0, $payee->wallet()->balance());
+
     }
     public function tearDown(): void
     {
