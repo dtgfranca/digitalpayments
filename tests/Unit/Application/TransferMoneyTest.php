@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Application;
 
 use App\Application\TranferMoney;
 use App\Domain\Exceptions\InsuficientFundsException;
@@ -9,7 +9,7 @@ use App\Domain\Transfer\AuthorizerInterface;
 use App\Domain\Transfer\NotifyerInterface;
 use App\Domain\User\User;
 use App\Domain\ValueObjects\Amount;
-use App\Domain\ValueObjects\Document;
+use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\Password;
 use App\Domain\ValueObjects\UserType;
@@ -24,7 +24,7 @@ class TransferMoneyTest extends TestCase
         $payer = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('80767437020'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(20000)),
             type: UserType::REGULAR
@@ -34,7 +34,7 @@ class TransferMoneyTest extends TestCase
         $payee = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('04623103021'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
@@ -65,7 +65,7 @@ class TransferMoneyTest extends TestCase
         $payer = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('04623103021'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(4000)),
             type: UserType::REGULAR
@@ -75,7 +75,7 @@ class TransferMoneyTest extends TestCase
         $payee = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('78008242094'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
@@ -103,7 +103,7 @@ class TransferMoneyTest extends TestCase
         $payer = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('04623103021'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(4000)),
             type: UserType::MERCHANT
@@ -113,7 +113,7 @@ class TransferMoneyTest extends TestCase
         $payee = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('78008242094'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
@@ -140,7 +140,7 @@ class TransferMoneyTest extends TestCase
         $payer = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('69579045046'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(40000)),
             type: UserType::REGULAR
@@ -150,7 +150,7 @@ class TransferMoneyTest extends TestCase
         $payee = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('67651355024'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
@@ -181,7 +181,7 @@ class TransferMoneyTest extends TestCase
         $payer = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('67651355024'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(20000)),
             type: UserType::REGULAR
@@ -191,7 +191,7 @@ class TransferMoneyTest extends TestCase
         $payee = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('22378312032'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(10000)),
             type: UserType::REGULAR
@@ -221,7 +221,7 @@ class TransferMoneyTest extends TestCase
         $payer = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('22378312032'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(20000)),
             type: UserType::REGULAR
@@ -231,7 +231,7 @@ class TransferMoneyTest extends TestCase
         $payee = new User(
             uuid: new Password(4),
             fullname: 'Diego franca',
-            document: new Document('07634403694'),
+            document: new Cpf('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(10000)),
             type: UserType::REGULAR
