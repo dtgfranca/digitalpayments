@@ -1,9 +1,10 @@
 <?php
 
-namespace Tests\Unit\Domain\User;
+namespace Tests\Unit\Domain;
 
 use App\Domain\User\User;
 use App\Domain\ValueObjects\Amount;
+use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\Password;
@@ -13,13 +14,26 @@ use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
+    public function test_should_create_valid_email(): void
+    {
+        $emailStr = 'diego.tg.franca@gmail.com';
+        $email = new Email($emailStr);
+        $this->assertEquals($emailStr, $email->value());
+    }
+    public function test_should_throw_exception_for_invalid_email(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new Email('email-invalido');
+    }
+
+
     public function test_regular_user_can_send_money(): void
     {
         // GIVEN
         $user = new User(
             uuid: new Password(4),
             fullname: 'User Regular',
-            document: new Document('07634403694'),
+            document: new Cpf('07634493694'),
             email: new Email('regular@example.com'),
             wallet: new Wallet(new Amount(1000)),
             type: UserType::REGULAR
@@ -36,7 +50,7 @@ class UserTest extends TestCase
         $user = new User(
             uuid: new Password(4),
             fullname: 'User Merchant',
-            document: new Document('07634403694'),
+            document: new Cpf('07634493694'),
             email: new Email('merchant@example.com'),
             wallet: new Wallet(new Amount(1000)),
             type: UserType::MERCHANT
@@ -55,7 +69,7 @@ class UserTest extends TestCase
         $user = new User(
             uuid: new Password(4),
             fullname: 'User Test',
-            document: new Document('07634403694'),
+            document: new Cpf('07634493694'),
             email: new Email('test@example.com'),
             wallet: $wallet,
             type: UserType::REGULAR
@@ -65,22 +79,42 @@ class UserTest extends TestCase
         $this->assertEquals(50.0, $user->balance());
     }
 
-    public function test_user_wallet_interactions(): void
+    public function test_should_accept_a_valid_cpf(): void
     {
-         // GIVEN
-         $user = new User(
-            uuid: new Password(4),
-            fullname: 'User Test',
-            document: new Document('07634403694'),
-            email: new Email('test@example.com'),
-            wallet: new Wallet(new Amount(10000)), // 100.00
-            type: UserType::REGULAR
-        );
+        // GIVEN
+        $validCpf = '07634493694';
 
         // WHEN
-        $user->wallet()->debit(new Amount(3000)); // - 30.00
+        $document = new Cpf($validCpf);
 
         // THEN
-        $this->assertEquals(70.0, $user->balance());
+        $this->assertEquals($validCpf, $document->value());
     }
+    public function test_should_accept_cpf_with_formatting_and_sanitize(): void
+    {
+        // GIVEN
+        $formattedCpf = '076.344.936-94';
+        $expectedCpf = '07634493694';
+
+        // WHEN
+        $document = new Cpf($formattedCpf);
+
+        // THEN
+        $this->assertEquals($expectedCpf, $document->value());
+    }
+
+    public function test_should_throw_exception_for_invalid_cpf_digits(): void
+    {
+        // THEN
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid CPF');
+
+        // WHEN (CPF com último dígito errado)
+        new Cpf('07634403695');
+    }
+
+
+
+
+
 }
