@@ -2,6 +2,8 @@
 
 namespace App\Application;
 
+use App\Domain\Exceptions\DocumentAlreadyExistsException;
+use App\Domain\Exceptions\EmailAlreadyExistsException;
 use App\Domain\User\UserRepositoryInterface;
 
 class CreateUser
@@ -16,8 +18,11 @@ class CreateUser
         $existingUserWithEmail = $this->userRepository->findByEmail($data['email']);
         $existingUserWithCpf = $this->userRepository->findByCpf($data['document']);
 
-        if($existingUserWithEmail && $existingUserWithCpf) {
-            throw new \Exception('User already exists');
+        if($existingUserWithEmail) {
+            throw new EmailAlreadyExistsException('User already exists');
+        }
+        if( $existingUserWithCpf) {
+            throw new DocumentAlreadyExistsException('Document already exists');
         }
         try{
             $this->userRepository->save($data);

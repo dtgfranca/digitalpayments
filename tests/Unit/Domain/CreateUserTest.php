@@ -3,6 +3,8 @@
 namespace Tests\Unit\Domain;
 
 use App\Application\CreateUser;
+use App\Domain\Exceptions\DocumentAlreadyExistsException;
+use App\Domain\Exceptions\EmailAlreadyExistsException;
 use App\Domain\User\User;
 use App\Domain\User\UserRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
@@ -37,10 +39,59 @@ class CreateUserTest extends TestCase
         //WHEN
         $data = $user->toArray();
         $this->repositoryMock->shouldReceive('findByEmail')->once()->with($data['email'])->andReturnNull();
-        $this->repositoryMock->shouldReceive('findByCPF')->once()->with($data['document'])->andReturnNull();
+        $this->repositoryMock->shouldReceive('findByCpf')->once()->with($data['document'])->andReturnNull();
         $this->repositoryMock->shouldReceive('save')->once()->with($data)->andReturn($user);
         $response = $this->useCase->execute($data);
         //THEN
         $this->assertNull($response);
     }
+    public function test_should_throw_exception_when_email_already_exists(): void
+    {
+        // GIVEN
+        $user  = User::create(
+            fullname: 'Diego franca',
+            document: new Cpf('34067941064'),
+            email: new Email('diego.tg.franca@gmail.com'),
+            wallet: new Wallet(amount: new Amount(10000)),
+            type: UserType::REGULAR
+        );
+
+        $data = $user->toArray();
+        $this->repositoryMock->shouldReceive('findByEmail')
+            ->andReturn($data['email']);
+
+        $this->repositoryMock->shouldReceive('findByCpf')
+            ->andReturnNull();
+
+
+        // THEN
+        $this->expectException(EmailAlreadyExistsException::class);
+        $this->expectExceptionMessage('User already exists');
+
+        // WHEN
+        $this->useCase->execute($data);
+    }
+    public function test_should_throw_exception_when_document_already_exists(): void
+    {
+        // GIVEN
+        $user  = User::create(
+            fullname: 'Diego franca',
+            document: new Cpf('34067941064'),
+            email: new Email('diego.tg.franca@gmail.com'),
+            wallet: new Wallet(amount: new Amount(10000)),
+            type: UserType::REGULAR
+        );
+        $data = $user->toArray();
+        $this->repositoryMock->shouldReceive('findByEmail')->andReturn(null);
+        $this->repositoryMock->shouldReceive('findByCpf')
+            ->andReturn(data: $data['document']);
+
+        // THEN
+        $this->expectException(DocumentAlreadyExistsException::class);
+
+        // WHEN
+        $this->useCase->execute($data);
+    }
+
+
 }
