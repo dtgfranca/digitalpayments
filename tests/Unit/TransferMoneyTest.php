@@ -72,9 +72,44 @@ class TransferMoneyTest extends TestCase
             type: UserType::REGULAR
         );
         $useCase = new TranferMoney();
+
+        // WHEN
         $this->expectException(InsuficientFundsException::class);
         $this->expectExceptionMessage('Insufficient funds');
+        $useCase->execute(
+            payer: $payer,
+            payee: $payee,
+            amount: new Amount(10000)
+        );
+
+    }
+
+    public function test_user_cannot_transfer_when_was_merchant()
+    {
+        // GIVEN
+        $payer = new User(
+            uuid: new Password(4),
+            fullname: 'Diego franca',
+            document: new Document('07634403694'),
+            email: new Email('diego.tg.franca@gmail.com'),
+            wallet: new Wallet(amount: new Amount(4000)),
+            type: UserType::MERCHANT
+        );
+
+
+        $payee = new User(
+            uuid: new Password(4),
+            fullname: 'Diego franca',
+            document: new Document('07634403694'),
+            email: new Email('diego.tg.franca@gmail.com'),
+            wallet: new Wallet(amount: new Amount(5000)),
+            type: UserType::REGULAR
+        );
+        $useCase = new TranferMoney();
+
         // WHEN
+        $this->expectException(InsuficientFundsException::class);
+        $this->expectExceptionMessage('Insufficient funds');
         $useCase->execute(
             payer: $payer,
             payee: $payee,
