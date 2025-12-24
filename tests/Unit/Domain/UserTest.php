@@ -7,7 +7,7 @@ use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
-use App\Domain\ValueObjects\Password;
+use App\Domain\ValueObjects\Uuid;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\Wallet\Wallet;
 use PHPUnit\Framework\TestCase;
@@ -30,8 +30,7 @@ class UserTest extends TestCase
     public function test_regular_user_can_send_money(): void
     {
         // GIVEN
-        $user = new User(
-            uuid: new Password(4),
+        $user = User::create(
             fullname: 'User Regular',
             document: new Cpf('07634493694'),
             email: new Email('regular@example.com'),
@@ -47,8 +46,8 @@ class UserTest extends TestCase
     public function test_merchant_user_cannot_send_money(): void
     {
         // GIVEN
-        $user = new User(
-            uuid: new Password(4),
+        $user = User::create(
+
             fullname: 'User Merchant',
             document: new Cpf('07634493694'),
             email: new Email('merchant@example.com'),
@@ -66,8 +65,7 @@ class UserTest extends TestCase
         // GIVEN
         $initialAmount = 5000; // 50.00
         $wallet = new Wallet(new Amount($initialAmount));
-        $user = new User(
-            uuid: new Password(4),
+        $user = User::create(
             fullname: 'User Test',
             document: new Cpf('07634493694'),
             email: new Email('test@example.com'),

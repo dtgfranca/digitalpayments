@@ -11,7 +11,7 @@ use App\Domain\User\User;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
-use App\Domain\ValueObjects\Password;
+use App\Domain\ValueObjects\Uuid;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\Wallet\Wallet;
 use PHPUnit\Framework\TestCase;
@@ -21,8 +21,7 @@ class TransferMoneyTest extends TestCase
     public function test_user_can_transfer_money()
     {
         // GIVEN
-        $payer = new User(
-            uuid: new Password(4),
+        $payer = User::create(
             fullname: 'Diego franca',
             document: new Cpf('80767437020'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -31,8 +30,7 @@ class TransferMoneyTest extends TestCase
         );
 
 
-        $payee = new User(
-            uuid: new Password(4),
+        $payee = User::create(
             fullname: 'Diego franca',
             document: new Cpf('04623103021'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -62,8 +60,7 @@ class TransferMoneyTest extends TestCase
     public function test_user_cannot_transfer_insuficient_funds()
     {
         // GIVEN
-        $payer = new User(
-            uuid: new Password(4),
+        $payer = User::create(
             fullname: 'Diego franca',
             document: new Cpf('04623103021'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -72,8 +69,7 @@ class TransferMoneyTest extends TestCase
         );
 
 
-        $payee = new User(
-            uuid: new Password(4),
+        $payee = User::create(
             fullname: 'Diego franca',
             document: new Cpf('78008242094'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -100,8 +96,7 @@ class TransferMoneyTest extends TestCase
     public function test_user_cannot_transfer_when_was_merchant()
     {
         // GIVEN
-        $payer = new User(
-            uuid: new Password(4),
+        $payer = User::create(
             fullname: 'Diego franca',
             document: new Cpf('04623103021'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -110,8 +105,7 @@ class TransferMoneyTest extends TestCase
         );
 
 
-        $payee = new User(
-            uuid: new Password(4),
+        $payee = User::create(
             fullname: 'Diego franca',
             document: new Cpf('78008242094'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -137,8 +131,7 @@ class TransferMoneyTest extends TestCase
     public function test_should_return_exception_when_external_service_return_not_allowed()
     {
         // GIVEN
-        $payer = new User(
-            uuid: new Password(4),
+        $payer = User::create(
             fullname: 'Diego franca',
             document: new Cpf('69579045046'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -147,8 +140,7 @@ class TransferMoneyTest extends TestCase
         );
 
 
-        $payee = new User(
-            uuid: new Password(4),
+        $payee = User::create(
             fullname: 'Diego franca',
             document: new Cpf('67651355024'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -178,8 +170,7 @@ class TransferMoneyTest extends TestCase
     public function test_should_sent_notify_when_transaction_was_succed(): void
     {
         // GIVEN
-        $payer = new User(
-            uuid: new Password(4),
+        $payer = User::create(
             fullname: 'Diego franca',
             document: new Cpf('67651355024'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -188,8 +179,7 @@ class TransferMoneyTest extends TestCase
         );
 
 
-        $payee = new User(
-            uuid: new Password(4),
+        $payee = User::create(
             fullname: 'Diego franca',
             document: new Cpf('22378312032'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -218,8 +208,7 @@ class TransferMoneyTest extends TestCase
     public function test_should_make_rollback_when_transaction_failed(): void
     {
         // GIVEN
-        $payer = new User(
-            uuid: new Password(4),
+        $payer = User::create(
             fullname: 'Diego franca',
             document: new Cpf('22378312032'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -228,8 +217,7 @@ class TransferMoneyTest extends TestCase
         );
 
 
-        $payee = new User(
-            uuid: new Password(4),
+        $payee = User::create(
             fullname: 'Diego franca',
             document: new Cpf('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),

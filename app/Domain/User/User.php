@@ -7,22 +7,39 @@ use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
-use App\Domain\ValueObjects\Password;
+use App\Domain\ValueObjects\Uuid;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\Wallet\Wallet;
 
 
 class User extends UserRegular
 {
-    public function __construct(
-        private readonly Password $uuid,
-        private readonly string $fullname,
-        private readonly Cpf $document,
-        private readonly Email $email,
-        private readonly Wallet $wallet,
+    private function __construct(
+        private readonly Uuid     $uuid,
+        private readonly string   $fullname,
+        private readonly Cpf      $document,
+        private readonly Email    $email,
+        private readonly Wallet   $wallet,
         private readonly UserType $type
 
     ) {}
+
+    public static function create(
+        string $fullname,
+        Cpf $document,
+        Email $email,
+        Wallet $wallet,
+        UserType $type
+    ): self {
+        return new self(
+            uuid: Uuid::generate(),
+            fullname: $fullname,
+            document: $document,
+            email: $email,
+            wallet: $wallet,
+            type: $type
+        );
+    }
 
     public function balance(): float
     {
