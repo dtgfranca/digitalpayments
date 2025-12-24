@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Application\TranferMoney;
 use App\Domain\Exceptions\InsuficientFundsException;
+use App\Domain\Exceptions\TransferNotAllowedException;
 use App\Domain\User\User;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Document;
@@ -108,8 +109,8 @@ class TransferMoneyTest extends TestCase
         $useCase = new TranferMoney();
 
         // WHEN
-        $this->expectException(InsuficientFundsException::class);
-        $this->expectExceptionMessage('Insufficient funds');
+        $this->expectException(TransferNotAllowedException::class);
+        $this->expectExceptionMessage('Merchant profiles cannot make transfers, only receive them.');
         $useCase->execute(
             payer: $payer,
             payee: $payee,
