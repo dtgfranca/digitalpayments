@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Application\TranferMoney;
 use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\Exceptions\TransferNotAllowedException;
+use App\Domain\Transfer\AuthorizerInterface;
 use App\Domain\User\User;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Document;
@@ -139,7 +140,12 @@ class TransferMoneyTest extends TestCase
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
         );
-        $useCase = new TranferMoney();
+
+        $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
+            $mock->shouldReceive('authorize')->andReturn(false);
+        });
+
+        $useCase = new TranferMoney($authorizerMock);
 
         // WHEN
         $this->expectException(TransferNotAllowedException::class);

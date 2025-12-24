@@ -14,15 +14,13 @@ class Transfer
 
     ) {}
 
-    public function execute(): void
+    public function commit(): void
     {
-//        if($this->payer->balance() < $this->amount->toFloat()) {
-//            return 0.0;
-//        }
         $this->payer->debit($this->amount);
         $this->payee->credit($this->amount);
 
     }
 
-    public function rollback(): void {}
+    public function rollback(): void
+    {}
 }

@@ -43,5 +43,9 @@ class User extends UserRegular
     {
         return $this->type->value;
     }
+    public function canSendMoney(): bool
+    {
+        return $this->getTypeUser() !== UserType::MERCHANT->value;
+    }
 
 }
