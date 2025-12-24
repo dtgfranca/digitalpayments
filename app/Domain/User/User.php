@@ -39,5 +39,9 @@ class User extends UserRegular
     {
          $this->wallet->add($amount);
     }
+    public function getTypeUser(): string
+    {
+        return $this->type->value;
+    }
 
 }

@@ -5,6 +5,6 @@ namespace App\Domain\ValueObjects;
 enum UserType: string
 {
     case REGULAR = 'REGULAR';
-    case LOJISTA = 'LOJISTA';
+    case  MERCHANT = 'MERCHANT';
 
 }
