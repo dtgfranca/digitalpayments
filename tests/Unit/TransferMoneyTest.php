@@ -166,4 +166,41 @@ class TransferMoneyTest extends TestCase
         );
 
     }
+    public function test_should_make_rollback_when_transaction_failed(): void
+    {
+        // GIVEN
+        $payer = new User(
+            uuid: new Password(4),
+            fullname: 'Diego franca',
+            document: new Document('07634403694'),
+            email: new Email('diego.tg.franca@gmail.com'),
+            wallet: new Wallet(amount: new Amount(20000)),
+            type: UserType::REGULAR
+        );
+
+
+        $payee = new User(
+            uuid: new Password(4),
+            fullname: 'Diego franca',
+            document: new Document('07634403694'),
+            email: new Email('diego.tg.franca@gmail.com'),
+            wallet: new Wallet(amount: new Amount(10000)),
+            type: UserType::REGULAR
+        );
+        $authorizerMock = \Mockery::mock(AuthorizerInterface::class, function ($mock) {
+            $mock->shouldReceive('authorize')->andReturn(true);
+        });
+        $useCase = new TranferMoney($authorizerMock);
+
+        // WHEN
+        $useCase->execute(
+            payer: $payer,
+            payee: $payee,
+            amount: new Amount(10000)
+        );
+        // THEN
+        $this->assertEquals(100.0, $payer->balance());
+        $this->assertEquals(200.0, $payee->balance());
+    }
+
 }
