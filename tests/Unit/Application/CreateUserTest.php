@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Domain;
+namespace Tests\Unit\Application;
 
 use App\Application\CreateUser;
 use App\Domain\Exceptions\DocumentAlreadyExistsException;

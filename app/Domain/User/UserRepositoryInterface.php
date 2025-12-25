@@ -6,5 +6,6 @@ interface UserRepositoryInterface
 {
     public function findByEmail(string $email): ?string;
     public function findByCpf(string $cpf): ?string;
+    public function findById(string $cpf): ?User;
     public function save(array $user): void;
 }
