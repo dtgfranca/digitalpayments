@@ -5,7 +5,7 @@ namespace App\Domain\Wallet;
 use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\ValueObjects\Amount;
 
-final class Wallet
+class Wallet
 {
     private int $balance;
     public function __construct(private  Amount $amount) {

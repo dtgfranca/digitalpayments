@@ -38,4 +38,8 @@ class CustomerRepository implements CustomerRepositoryInterface
 
     }
 
+    public function saveBalance(int $amount, string $userId): void
+    {
+        Wallet::where('customer_id', $userId)->update(['balance'=> $amount]);
+    }
 }

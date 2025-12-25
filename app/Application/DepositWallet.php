@@ -5,6 +5,7 @@ namespace App\Application;
 use App\Domain\Exceptions\UserNotFoundException;
 use App\Domain\Customer\CustomerRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
+use App\Domain\Wallet\Wallet;
 
 class DepositWallet
 {
@@ -18,8 +19,12 @@ class DepositWallet
         if(!$user) {
             throw new UserNotFoundException('Customer not found');
         }
-        $user->wallet()->credit($amount);
-        $this->userRepository->saveBalance($user);
+        $wallet = new Wallet(
+            new Amount($user->wallet->balance)
+        );
+       $wallet->credit($amount);
+
+        $this->userRepository->saveBalance($wallet->balance(), $userID);
 
 
     }
