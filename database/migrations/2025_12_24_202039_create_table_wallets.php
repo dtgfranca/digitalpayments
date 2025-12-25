@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->uuid('id')->unique();
-            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
-            $table->bigInteger('balance')->default(0); // Armazenado em centavos (Amount->value)
+            $table->foreignId('customer_id')->unique()->constrained();
+            $table->bigInteger('balance')->default(0)->comment('Armazenado em centavos');
             $table->timestamps();
         });
 

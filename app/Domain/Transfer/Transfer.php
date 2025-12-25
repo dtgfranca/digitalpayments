@@ -2,17 +2,17 @@
 
 namespace App\Domain\Transfer;
 
-use App\Domain\User\User;
+use App\Domain\Customer\Customer;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Uuid;
 
 class Transfer
 {
     private function __construct(
-        private Uuid $id,
-        private User $payer,
-        private User $payee,
-        private Amount $amount,
+        private Uuid     $id,
+        private Customer $payer,
+        private Customer $payee,
+        private Amount   $amount,
 
     ) {}
     public function id(): Uuid
@@ -20,12 +20,12 @@ class Transfer
         return $this->id;
     }
 
-    public function payer(): User
+    public function payer(): Customer
     {
         return $this->payer;
     }
 
-    public function payee(): User
+    public function payee(): Customer
     {
         return $this->payee;
     }
@@ -34,7 +34,7 @@ class Transfer
     {
         return $this->amount;
     }
-    public static function create(User $payer, User $payee, Amount $amount): self
+    public static function create(Customer $payer, Customer $payee, Amount $amount): self
     {
         return new self(
             Uuid::generate(),

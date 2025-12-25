@@ -11,7 +11,7 @@ use App\Domain\Transfer\NotifyerInterface;
 use App\Domain\Transfer\Transfer;
 use App\Domain\Transfer\TransactionMangerInterface;
 use App\Domain\Transfer\TransferRepositoryInterface;
-use App\Domain\User\User;
+use App\Domain\Customer\Customer;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\UserType;
 
@@ -27,7 +27,7 @@ class TransferMoney
 
     }
 
-    public function execute(User $payer, User $payee, Amount $amount): void
+    public function execute(Customer $payer, Customer $payee, Amount $amount): void
     {
         if(!$payer->canSendMoney()) {
             throw new TransferNotAllowedException('Merchant profiles cannot make transfers, only receive them.');

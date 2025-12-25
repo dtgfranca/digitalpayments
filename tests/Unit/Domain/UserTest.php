@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Domain;
 
-use App\Domain\User\User;
+use App\Domain\Customer\Customer;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Document;
@@ -30,8 +30,8 @@ class UserTest extends TestCase
     public function test_regular_user_can_send_money(): void
     {
         // GIVEN
-        $user = User::create(
-            fullname: 'User Regular',
+        $user = Customer::create(
+            fullname: 'Customer Regular',
             document: new Cpf('07634493694'),
             email: new Email('regular@example.com'),
             wallet: new Wallet(new Amount(1000)),
@@ -46,9 +46,9 @@ class UserTest extends TestCase
     public function test_merchant_user_cannot_send_money(): void
     {
         // GIVEN
-        $user = User::create(
+        $user = Customer::create(
 
-            fullname: 'User Merchant',
+            fullname: 'Customer Merchant',
             document: new Cpf('07634493694'),
             email: new Email('merchant@example.com'),
             wallet: new Wallet(new Amount(1000)),
@@ -65,8 +65,8 @@ class UserTest extends TestCase
         // GIVEN
         $initialAmount = 5000; // 50.00
         $wallet = new Wallet(new Amount($initialAmount));
-        $user = User::create(
-            fullname: 'User Test',
+        $user = Customer::create(
+            fullname: 'Customer Test',
             document: new Cpf('07634493694'),
             email: new Email('test@example.com'),
             wallet: $wallet,

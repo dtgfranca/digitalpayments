@@ -2,9 +2,9 @@
 
 namespace App\Domain\Transfer;
 
-use App\Domain\User\User;
+use App\Domain\Customer\Customer;
 
 interface NotifyerInterface
 {
-    public function notify(User $payee): void;
+    public function notify(Customer $payee): void;
 }

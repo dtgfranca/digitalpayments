@@ -9,8 +9,8 @@ return new class extends Migration {
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->uuid('id')->unique();
-            $table->foreignId('payer_id')->constrained('users');
-            $table->foreignId('payee_id')->constrained('users');
+            $table->foreignId('payer_id')->constrained('customers');
+            $table->foreignId('payee_id')->constrained('customers');
             $table->bigInteger('amount'); // Valor em centavos
             $table->timestamps();
         });

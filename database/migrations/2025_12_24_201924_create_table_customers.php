@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->uuid('id')->unique();
             $table->string('fullname');
-            $table->string('document')->unique(); // CPF ou CNPJ
+            $table->string('document')->unique()->comment('CPF ou CNPJ');
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('type', ['REGULAR', 'MERCHANT']);
@@ -21,6 +21,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('customers');
     }
 };

@@ -5,8 +5,8 @@ namespace Tests\Unit\Application;
 use App\Application\CreateUser;
 use App\Domain\Exceptions\DocumentAlreadyExistsException;
 use App\Domain\Exceptions\EmailAlreadyExistsException;
-use App\Domain\User\User;
-use App\Domain\User\UserRepositoryInterface;
+use App\Domain\Customer\Customer;
+use App\Domain\Customer\CustomerRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
@@ -21,7 +21,7 @@ class CreateUserTest extends TestCase
 
     public function setUp(): void
     {
-        $this->repositoryMock = \Mockery::mock(UserRepositoryInterface::class);
+        $this->repositoryMock = \Mockery::mock(CustomerRepositoryInterface::class);
         $this->useCase = new CreateUser($this->repositoryMock);
 
     }
@@ -29,7 +29,7 @@ class CreateUserTest extends TestCase
     public function test_should_create_a_user()
     {
         //GIVEN
-        $user  = User::create(
+        $user  = Customer::create(
             fullname: 'Diego franca',
             document: new Cpf('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -48,7 +48,7 @@ class CreateUserTest extends TestCase
     public function test_should_throw_exception_when_email_already_exists(): void
     {
         // GIVEN
-        $user  = User::create(
+        $user  = Customer::create(
             fullname: 'Diego franca',
             document: new Cpf('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -66,7 +66,7 @@ class CreateUserTest extends TestCase
 
         // THEN
         $this->expectException(EmailAlreadyExistsException::class);
-        $this->expectExceptionMessage('User already exists');
+        $this->expectExceptionMessage('Customer already exists');
 
         // WHEN
         $this->useCase->execute($data);
@@ -74,7 +74,7 @@ class CreateUserTest extends TestCase
     public function test_should_throw_exception_when_document_already_exists(): void
     {
         // GIVEN
-        $user  = User::create(
+        $user  = Customer::create(
             fullname: 'Diego franca',
             document: new Cpf('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\User;
+namespace App\Domain\Customer;
 
 use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\ValueObjects\Amount;
@@ -12,7 +12,7 @@ use App\Domain\ValueObjects\UserType;
 use App\Domain\Wallet\Wallet;
 
 
-class User extends UserRegular
+class Customer extends UserRegular
 {
     private function __construct(
         private readonly Uuid     $uuid,
