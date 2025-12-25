@@ -48,4 +48,48 @@ class DepositWalletTest extends TestCase
 
 
     }
+
+    public function test_should_throw_exception_when_customer_not_found(): void
+    {
+        // GIVEN
+        $nonExistentId = (string) Uuid::generate();
+        $amount = new Amount(5000);
+        $useCase = app(DepositWallet::class);
+
+        // THEN
+        $this->expectException(\App\Domain\Exceptions\UserNotFoundException::class);
+        $this->expectExceptionMessage('Customer not found');
+
+        // WHEN
+        $useCase->execute($nonExistentId, $amount);
+    }
+    public function test_should_return_throw_wallet_exception_when_deposit_fails(): void
+    {
+        // GIVEN
+        $customer = \App\Models\Customer::factory()->create([
+            'id'=>Uuid::generate(),
+            'document' => '34067941064',
+            'fullname'=>'Diego franca',
+            'email'=>'teste@gmail.com',
+            'password' => 'asdfadf'
+        ]);
+
+        $amount = new \App\Domain\ValueObjects\Amount(1000);
+
+        // Simulamos que, ao tentar salvar o saldo, algo no domínio/repositório lança uma WalletException
+        $this->instance(\App\Domain\Customer\CustomerRepositoryInterface::class, \Mockery::mock(\App\Domain\Customer\CustomerRepositoryInterface::class, function ($mock) use ($customer) {
+            $mock->shouldReceive('findById')->with($customer->id)->andThrow(new \App\Domain\Exceptions\WalletException('Invalid wallet operation'));;
+        })->makePartial());
+
+        $useCase = app(\App\Application\DepositWallet::class);
+
+        // THEN
+        $this->expectException(\App\Domain\Exceptions\WalletException::class);
+        $this->expectExceptionMessage('Error processing deposit');
+
+        // WHEN
+        $useCase->execute($customer->id, $amount);
+    }
+
+
 }
