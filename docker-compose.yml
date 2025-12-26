@@ -5,8 +5,6 @@ services:
     build:
       context: .
     container_name: app
-    volumes:
-      - .:/var/www
     networks:
       - laravel
     depends_on:
