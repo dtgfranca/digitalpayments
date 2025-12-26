@@ -90,4 +90,4 @@ Os testes unitários e de integração interna, por outro lado, não dependem de
 
 As decisões técnicas e arquiteturais deste projeto, incluindo o uso de **Domain-Driven Design (DDD)**, **CQRS**, geração de identificadores fora do banco de dados, padrões de projeto e estratégias de escalabilidade, estão documentadas no arquivo abaixo:
 
-➡️ **[Architecture & Decisions](./ARCHITECTURE.md)**
+➡️ **[Architecture & Decisions](./architecture.md)**
