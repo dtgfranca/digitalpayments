@@ -2,11 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\Customer;
-use App\Models\Wallet;
-use App\Domain\ValueObjects\Uuid;
 
 class EndToEndTest extends TestCase
 {
@@ -81,7 +79,7 @@ class EndToEndTest extends TestCase
 
     public function test_merchant_cannot_transfer()
     {
-        //create customer
+        // create customer
         $customer = $this->postJson('/api/customers', [
             'fullname' => 'Joao victor',
             'email' => 'victor@example.com',
@@ -100,8 +98,7 @@ class EndToEndTest extends TestCase
             'type' => 'MERCHANT',
             'balance' => 1000,
         ]);
-//        $merchant = Customer::where('email', 'shop1@example.com')->first();
-
+        //        $merchant = Customer::where('email', 'shop1@example.com')->first();
 
         // Login
         $response = $this->postJson('/api/auth/login', [

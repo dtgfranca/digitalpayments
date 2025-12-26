@@ -21,7 +21,7 @@ class Customer extends UserRegular
         private readonly UserType $type
 
     ) {
-        if($type->value === UserType::MERCHANT->value && $document->type() !== DocumentType::CNPJ) {
+        if ($type->value === UserType::MERCHANT->value && $document->type() !== DocumentType::CNPJ) {
             throw new \Exception('Merchant cannot be a customer');
         }
     }

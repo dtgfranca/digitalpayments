@@ -7,7 +7,8 @@ use App\Models\Wallet;
 
 class WalletBalanceReadRepository implements WalletBalanceReadRepositoryInterface
 {
-    public function getBalance(string $userId): Wallet {
-        return  Wallet::where('customer_id', $userId)->first();
+    public function getBalance(string $userId): Wallet
+    {
+        return Wallet::where('customer_id', $userId)->first();
     }
 }

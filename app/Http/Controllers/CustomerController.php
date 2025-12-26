@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Application\CreateUser;
+use App\Domain\ValueObjects\Uuid;
 use App\Http\Requests\CustomerRequest;
 use Illuminate\Http\JsonResponse;
-use App\Http\Controllers\Controller;
-use App\Domain\ValueObjects\Uuid;
 
 class CustomerController extends Controller
 {
@@ -19,10 +18,13 @@ class CustomerController extends Controller
      *     path="/api/customers",
      *     summary="Create a new customer",
      *     tags={"Customers"},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"fullname","email","document","password","type","balance"},
+     *
      *             @OA\Property(property="fullname", type="string", example="John Doe"),
      *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
      *             @OA\Property(property="document", type="string", example="12345678900"),
@@ -31,13 +33,17 @@ class CustomerController extends Controller
      *             @OA\Property(property="balance", type="integer", example=1000)
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=201,
      *         description="Customer created successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="message", type="string", example="Customer created successfully")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
      *         description="Validation error"
@@ -58,11 +64,11 @@ class CustomerController extends Controller
             $this->createUser->execute($data);
 
             return response()->json([
-                'message' => 'Customer created successfully'
+                'message' => 'Customer created successfully',
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 400);
         }
     }

@@ -2,7 +2,7 @@
 
 namespace App\Domain\ValueObjects;
 
-enum DocumentType:string
+enum DocumentType: string
 {
     case CPF = 'CPF';
     case CNPJ = 'CNPJ';

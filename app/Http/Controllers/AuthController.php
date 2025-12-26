@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
@@ -13,23 +12,30 @@ class AuthController extends Controller
      *     path="/api/auth/login",
      *     summary="Authenticate user and return JWT token",
      *     tags={"Authentication"},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"email","password"},
+     *
      *             @OA\Property(property="email", type="string", format="email", example="user@example.com"),
      *             @OA\Property(property="password", type="string", format="password", example="password123")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successful login",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="access_token", type="string"),
      *             @OA\Property(property="token_type", type="string", example="bearer"),
      *             @OA\Property(property="expires_in", type="integer")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
@@ -53,6 +59,7 @@ class AuthController extends Controller
      *     summary="Log the user out (Invalidate the token)",
      *     tags={"Authentication"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Successfully logged out"
@@ -69,8 +76,7 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string $token
-     *
+     * @param  string  $token
      * @return \Illuminate\Http\JsonResponse
      */
     protected function respondWithToken($token)
@@ -78,7 +84,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60,
         ]);
     }
 }

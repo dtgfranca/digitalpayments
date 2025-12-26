@@ -8,7 +8,6 @@ use App\Domain\Customer\Customer;
 use App\Domain\Exceptions\ProcessTransferFailedException;
 use App\Domain\Transfer\TransferRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
-use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\UserType;

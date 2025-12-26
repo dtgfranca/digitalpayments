@@ -4,7 +4,8 @@ namespace App\Domain\ValueObjects;
 
 use App\Domain\Exceptions\InvalidDocumentException;
 
-final class Document {
+final class Document
+{
     private function __construct(
         private string $value,
         private DocumentType $type
@@ -46,7 +47,7 @@ final class Document {
 
         // rejeita CPFs com todos os dígitos iguais (ex: 11111111111)
         if (preg_match('/^(\d)\1{10}$/', $value)) {
-           return false;
+            return false;
         }
 
         // valida dígitos verificadores

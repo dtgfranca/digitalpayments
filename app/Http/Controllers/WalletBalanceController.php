@@ -10,6 +10,7 @@ class WalletBalanceController extends Controller
     public function __construct(
         private readonly GetWalletBalance $getWalletBalance
     ) {}
+
     /**
      * @OA\Get(
      *     path="/api/wallets/balance",
@@ -19,12 +20,13 @@ class WalletBalanceController extends Controller
      *     description="Returns the current balance of the user's wallet. This is a read-only operation (Query) and does not modify any system state.",
      *     operationId="getWalletBalance",
      *
-     *
      *     @OA\Response(
      *         response=200,
      *         description="Wallet balance retrieved successfully",
+     *
      *         @OA\JsonContent(
      *             type="object",
+     *
      *             @OA\Property(
      *                 property="user_id",
      *                 type="string",
@@ -44,12 +46,10 @@ class WalletBalanceController extends Controller
      *         response=404,
      *         description="Wallet not found for the given user"
      *     ),
-     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthenticated user"
      *     ),
-     *
      *     @OA\Response(
      *         response=500,
      *         description="Internal server error"
@@ -62,7 +62,7 @@ class WalletBalanceController extends Controller
 
         return response()->json([
             'user_id' => $balance->customer_id,
-            'balance' => $balance->balance / 100
+            'balance' => $balance->balance / 100,
         ]);
     }
 }

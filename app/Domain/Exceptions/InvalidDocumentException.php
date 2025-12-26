@@ -2,7 +2,4 @@
 
 namespace App\Domain\Exceptions;
 
-class InvalidDocumentException extends \Exception
-{
-
-}
+class InvalidDocumentException extends \Exception {}

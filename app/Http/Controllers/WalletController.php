@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Application\DepositWallet;
-use App\Http\Requests\WalletRequest;
 use App\Domain\ValueObjects\Amount;
+use App\Http\Requests\WalletRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 
 class WalletController extends Controller
 {
@@ -21,20 +20,27 @@ class WalletController extends Controller
      *     summary="Make a deposit into the authenticated user's wallet",
      *     tags={"Wallet"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"amount"},
+     *
      *             @OA\Property(property="amount", type="integer", example=100)
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Deposit successful",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="message", type="string", example="Deposit successful")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
@@ -54,11 +60,11 @@ class WalletController extends Controller
             $this->depositWallet->execute($customer->id, $amount);
 
             return response()->json([
-                'message' => 'Deposit successful'
+                'message' => 'Deposit successful',
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 400);
         }
     }

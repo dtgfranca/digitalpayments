@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Application\TransferMoney;
-use App\Domain\ValueObjects\Document;
-use App\Http\Requests\TranferRequest;
+use App\Domain\Customer\Customer as CustomerDomain;
 use App\Domain\Customer\CustomerRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
-use App\Domain\ValueObjects\Cpf;
+use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\ValueObjects\Uuid;
 use App\Domain\Wallet\Wallet;
-use App\Domain\Customer\Customer as CustomerDomain;
+use App\Http\Requests\TranferRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 
 class TransferController extends Controller
 {
@@ -30,21 +28,28 @@ class TransferController extends Controller
      *     summary="Execute a transfer between customers",
      *     tags={"Transfers"},
      *     security={{"bearerAuth":{}}},
+     *
      *     @OA\RequestBody(
      *         required=true,
+     *
      *         @OA\JsonContent(
      *             required={"payee_id","amount"},
+     *
      *             @OA\Property(property="payee_id", type="string", example="uuid-of-payee"),
      *             @OA\Property(property="amount", type="integer", example=100)
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=200,
      *         description="Transfer executed successfully",
+     *
      *         @OA\JsonContent(
+     *
      *             @OA\Property(property="message", type="string", example="Transfer executed successfully")
      *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
@@ -65,7 +70,7 @@ class TransferController extends Controller
             $payerModel = $this->customerRepository->findById($payerId);
             $payeeModel = $this->customerRepository->findById($payeeId);
 
-            if (!$payerModel || !$payeeModel) {
+            if (! $payerModel || ! $payeeModel) {
                 return response()->json(['message' => 'Customer not found'], 404);
             }
 
@@ -81,7 +86,7 @@ class TransferController extends Controller
             $payeeDomain = CustomerDomain::restore(
                 new Uuid($payeeModel->id),
                 $payeeModel->fullname,
-               Document::from($payeeModel->document),
+                Document::from($payeeModel->document),
                 new Email($payeeModel->email),
                 new Wallet(new Amount($payeeModel->wallet->balance)),
                 UserType::from($payeeModel->type)
@@ -94,11 +99,11 @@ class TransferController extends Controller
             );
 
             return response()->json([
-                'message' => 'Transfer executed successfully'
+                'message' => 'Transfer executed successfully',
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 400);
         }
     }
