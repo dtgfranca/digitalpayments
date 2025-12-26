@@ -34,7 +34,7 @@ class EndToEndTest extends TestCase
         $response = $this->postJson('/api/customers', [
             'fullname' => 'Merchant Shop',
             'email' => 'shop@example.com',
-            'document' => '36835116056',
+            'document' => '28235596000128',
             'password' => 'password123',
             'type' => 'MERCHANT',
             'balance' => 0,
@@ -87,7 +87,7 @@ class EndToEndTest extends TestCase
             'email' => 'victor@example.com',
             'document' => '62382987073',
             'password' => 'password123',
-            'type' => 'MERCHANT',
+            'type' => 'REGULAR',
             'balance' => 1000,
         ]);
         $customer = Customer::where('email', 'victor@example.com')->first();
@@ -95,7 +95,7 @@ class EndToEndTest extends TestCase
         $this->postJson('/api/customers', [
             'fullname' => 'Merchant Shop',
             'email' => 'shop1@example.com',
-            'document' => '00433866012',
+            'document' => '13273884000108',
             'password' => 'password123',
             'type' => 'MERCHANT',
             'balance' => 1000,
@@ -118,7 +118,7 @@ class EndToEndTest extends TestCase
             ]);
 
         $response->assertStatus(400);
-        $this->assertStringContainsString('Merchant profiles cannot make transfers', $response->json('message'));
+        $this->assertStringContainsString('only receive them', $response->json('message'));
     }
 
     public function test_insufficient_funds()

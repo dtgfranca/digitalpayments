@@ -21,6 +21,17 @@ if [ -f ".env" ]; then
     chmod 664 .env
 fi
 
+# Set permissions for SQLite databases
+if [ -d "database" ]; then
+    chown -R www-data:www-data database
+    chmod -R 775 database
+fi
+
+if [ -f "identifier.sqlite" ]; then
+    chown www-data:www-data identifier.sqlite
+    chmod 664 identifier.sqlite
+fi
+
 # Generate app key
 sudo -u www-data php artisan key:generate --no-interaction --force
 

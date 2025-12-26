@@ -3,6 +3,8 @@
 namespace App\Domain\Customer;
 
 use App\Domain\ValueObjects\Cpf;
+use App\Domain\ValueObjects\Document;
+use App\Domain\ValueObjects\DocumentType;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\ValueObjects\Uuid;
@@ -13,20 +15,25 @@ class Customer extends UserRegular
     private function __construct(
         private readonly Uuid $uuid,
         private readonly string $fullname,
-        private readonly Cpf $document,
+        private readonly Document $document,
         private readonly Email $email,
         private readonly Wallet $wallet,
         private readonly UserType $type
 
-    ) {}
+    ) {
+        if($type->value === UserType::MERCHANT->value && $document->type() !== DocumentType::CNPJ) {
+            throw new \Exception('Merchant cannot be a customer');
+        }
+    }
 
     public static function create(
         string $fullname,
-        Cpf $document,
+        Document $document,
         Email $email,
         Wallet $wallet,
         UserType $type
     ): self {
+
         return new self(
             uuid: Uuid::generate(),
             fullname: $fullname,
@@ -40,11 +47,12 @@ class Customer extends UserRegular
     public static function restore(
         Uuid $uuid,
         string $fullname,
-        Cpf $document,
+        Document $document,
         Email $email,
         Wallet $wallet,
         UserType $type
     ): self {
+
         return new self(
             uuid: $uuid,
             fullname: $fullname,

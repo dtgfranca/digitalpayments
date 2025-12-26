@@ -9,6 +9,7 @@ use App\Domain\Exceptions\ProcessTransferFailedException;
 use App\Domain\Transfer\TransferRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
+use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\UserType;
 use App\Events\MoneyTransferred;
@@ -119,9 +120,10 @@ class TransferMoneyTest extends TestCase
         string $email,
         int $amount
     ): Customer {
+
         $customerPayer = Customer::create(
             fullname: $name,
-            document: new Cpf($document),
+            document: Document::from($document),
             email: new Email($email),
             wallet: new \App\Domain\Wallet\Wallet(new Amount($amount)),
             type: UserType::REGULAR

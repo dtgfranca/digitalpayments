@@ -8,6 +8,7 @@ use App\Domain\Customer\CustomerRepositoryInterface;
 use App\Domain\Exceptions\DocumentAlreadyExistsException;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
+use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\ValueObjects\Uuid;
@@ -34,10 +35,11 @@ class CreateUserTest extends TestCase
     public function test_should_create_a_user(): void
     {
 
+
         // GIVEN
         $user = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('34067941064'),
+            document: Document::from('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(0)),
             type: UserType::REGULAR
@@ -73,7 +75,7 @@ class CreateUserTest extends TestCase
         ]);
         $user = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('34067941064'),
+            document:Document::from('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(0)),
             type: UserType::REGULAR
@@ -91,7 +93,7 @@ class CreateUserTest extends TestCase
         // GIVEN
         $user = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('34067941064'),
+            document:Document::from('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(10000)),
             type: UserType::REGULAR

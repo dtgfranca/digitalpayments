@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Application\TransferMoney;
+use App\Domain\ValueObjects\Document;
 use App\Http\Requests\TranferRequest;
 use App\Domain\Customer\CustomerRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
@@ -71,7 +72,7 @@ class TransferController extends Controller
             $payerDomain = CustomerDomain::restore(
                 new Uuid($payerModel->id),
                 $payerModel->fullname,
-                new Cpf($payerModel->document),
+                Document::from($payerModel->document),
                 new Email($payerModel->email),
                 new Wallet(new Amount($payerModel->wallet->balance)),
                 UserType::from($payerModel->type)
@@ -80,7 +81,7 @@ class TransferController extends Controller
             $payeeDomain = CustomerDomain::restore(
                 new Uuid($payeeModel->id),
                 $payeeModel->fullname,
-                new Cpf($payeeModel->document),
+               Document::from($payeeModel->document),
                 new Email($payeeModel->email),
                 new Wallet(new Amount($payeeModel->wallet->balance)),
                 UserType::from($payeeModel->type)

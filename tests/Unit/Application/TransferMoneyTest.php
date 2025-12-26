@@ -13,6 +13,7 @@ use App\Domain\Transfer\TransactionMangerInterface;
 use App\Domain\Transfer\TransferRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
+use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\Wallet\Wallet;
@@ -31,10 +32,11 @@ class TransferMoneyTest extends TestCase
 
     public function test_user_can_transfer_money()
     {
+
         // GIVEN
         $payer = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('80767437020'),
+            document: Document::from('80767437020'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(20000)),
             type: UserType::REGULAR
@@ -42,7 +44,7 @@ class TransferMoneyTest extends TestCase
 
         $payee = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('04623103021'),
+            document:Document::from('04623103021'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
@@ -79,7 +81,7 @@ class TransferMoneyTest extends TestCase
         // GIVEN
         $payer = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('04623103021'),
+            document:Document::from('04623103021'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(4000)),
             type: UserType::REGULAR
@@ -87,7 +89,7 @@ class TransferMoneyTest extends TestCase
 
         $payee = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('78008242094'),
+            document:Document::from('78008242094'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
@@ -119,7 +121,7 @@ class TransferMoneyTest extends TestCase
         // GIVEN
         $payer = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('04623103021'),
+            document:Document::from('86272983000130'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(4000)),
             type: UserType::MERCHANT
@@ -127,7 +129,7 @@ class TransferMoneyTest extends TestCase
 
         $payee = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('78008242094'),
+            document:Document::from('78008242094'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
@@ -157,7 +159,7 @@ class TransferMoneyTest extends TestCase
         // GIVEN
         $payer = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('69579045046'),
+            document:Document::from('69579045046'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(40000)),
             type: UserType::REGULAR
@@ -165,7 +167,7 @@ class TransferMoneyTest extends TestCase
 
         $payee = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('67651355024'),
+            document:Document::from('67651355024'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(5000)),
             type: UserType::REGULAR
@@ -197,7 +199,7 @@ class TransferMoneyTest extends TestCase
         // GIVEN
         $payer = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('67651355024'),
+            document:Document::from('67651355024'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(20000)),
             type: UserType::REGULAR
@@ -205,7 +207,7 @@ class TransferMoneyTest extends TestCase
 
         $payee = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('22378312032'),
+            document:Document::from('22378312032'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(10000)),
             type: UserType::REGULAR
@@ -244,7 +246,7 @@ class TransferMoneyTest extends TestCase
         // GIVEN
         $payer = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('22378312032'),
+            document:Document::from('22378312032'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(20000)),
             type: UserType::REGULAR
@@ -252,7 +254,7 @@ class TransferMoneyTest extends TestCase
 
         $payee = Customer::create(
             fullname: 'Diego franca',
-            document: new Cpf('34067941064'),
+            document:Document::from('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),
             wallet: new Wallet(amount: new Amount(10000)),
             type: UserType::REGULAR

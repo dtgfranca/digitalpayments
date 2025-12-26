@@ -3,14 +3,16 @@
 namespace Tests\Unit\Domain;
 
 use App\Domain\Customer\Customer;
+use App\Domain\Exceptions\InvalidDocumentException;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
+use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\Wallet\Wallet;
 use PHPUnit\Framework\TestCase;
 
-class UserTest extends TestCase
+class CustomerTest extends TestCase
 {
     public function test_should_create_valid_email(): void
     {
@@ -27,10 +29,11 @@ class UserTest extends TestCase
 
     public function test_regular_user_can_send_money(): void
     {
+
         // GIVEN
         $user = Customer::create(
             fullname: 'Customer Regular',
-            document: new Cpf('07634493694'),
+            document: Document::from('07634493694'),
             email: new Email('regular@example.com'),
             wallet: new Wallet(new Amount(1000)),
             type: UserType::REGULAR
@@ -47,7 +50,7 @@ class UserTest extends TestCase
         $user = Customer::create(
 
             fullname: 'Customer Merchant',
-            document: new Cpf('07634493694'),
+            document: Document::from('98000832000102'),
             email: new Email('merchant@example.com'),
             wallet: new Wallet(new Amount(1000)),
             type: UserType::MERCHANT
@@ -65,7 +68,7 @@ class UserTest extends TestCase
         $wallet = new Wallet(new Amount($initialAmount));
         $user = Customer::create(
             fullname: 'Customer Test',
-            document: new Cpf('07634493694'),
+            document: Document::from('07634493694'),
             email: new Email('test@example.com'),
             wallet: $wallet,
             type: UserType::REGULAR
@@ -81,7 +84,7 @@ class UserTest extends TestCase
         $validCpf = '07634493694';
 
         // WHEN
-        $document = new Cpf($validCpf);
+        $document = Document::from($validCpf);
 
         // THEN
         $this->assertEquals($validCpf, $document->value());
@@ -94,7 +97,7 @@ class UserTest extends TestCase
         $expectedCpf = '07634493694';
 
         // WHEN
-        $document = new Cpf($formattedCpf);
+        $document = Document::from($formattedCpf);
 
         // THEN
         $this->assertEquals($expectedCpf, $document->value());
@@ -103,10 +106,10 @@ class UserTest extends TestCase
     public function test_should_throw_exception_for_invalid_cpf_digits(): void
     {
         // THEN
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Invalid CPF');
+        $this->expectException(InvalidDocumentException::class);
+        $this->expectExceptionMessage('Document Invalid');
 
         // WHEN (CPF com último dígito errado)
-        new Cpf('07634403695');
+        Document::from('07634403695');
     }
 }
