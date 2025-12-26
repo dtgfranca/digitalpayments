@@ -29,7 +29,7 @@ class CustomerController extends Controller
      *             @OA\Property(property="email", type="string", format="email", example="john@example.com"),
      *             @OA\Property(property="document", type="string", example="12345678900"),
      *             @OA\Property(property="password", type="string", format="password", example="secret123"),
-     *             @OA\Property(property="type", type="string", enum={"common", "merchant"}, example="common"),
+     *             @OA\Property(property="type", type="string", enum={"REGULAR", "MERCHANT"}, example="REGULAR"),
      *             @OA\Property(property="balance", type="integer", example=1000)
      *         )
      *     ),

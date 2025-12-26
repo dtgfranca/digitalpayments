@@ -138,10 +138,10 @@
                                     "type": {
                                         "type": "string",
                                         "enum": [
-                                            "common",
-                                            "merchant"
+                                            "REGULAR",
+                                            "MERCHANT"
                                         ],
-                                        "example": "common"
+                                        "example": "REGULAR"
                                     },
                                     "balance": {
                                         "type": "integer",
