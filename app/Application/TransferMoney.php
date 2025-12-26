@@ -16,12 +16,13 @@ use App\Domain\Customer\Customer;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\UserType;
 use App\Events\MoneyTransferred;
+use Illuminate\Contracts\Events\Dispatcher;
 
 class TransferMoney
 {
     public function __construct(
         private readonly AuthorizerInterface $authorizer,
-        private readonly NotifyerInterface $notifyer,
+        private readonly ?Dispatcher $eventDispatcher,
         private readonly TransferRepositoryInterface $transferRepository,
         private readonly TransactionMangerInterface $transactionManger,
         private readonly CustomerRepositoryInterface $customerRepository,
@@ -51,10 +52,10 @@ class TransferMoney
             $this->transferRepository->save(TransferOutputDTO::fromTransfer($transfer)->toArray());
             $this->customerRepository->saveBalance($payer->wallet()->balance(), $payer->getUuid()->value());
             $this->customerRepository->saveBalance($payee->wallet()->balance(), $payee->getUuid()->value());
-            event(new MoneyTransferred(
+            $this->dispatch(
                 payeeId: $payee->getUuid()->value(),
                 amount: $amount->value()
-            ));
+            );
             $this->transactionManger->commit();
         }catch (InsuficientFundsException $e){
             $this->transactionManger->rollback();
@@ -67,6 +68,17 @@ class TransferMoney
             throw new ProcessTransferFailedException('Error processing transfer');
         }
 
+
+    }
+
+    private function dispatch( string $payeeId, int $amount):void
+    {
+        if (!empty($this->eventDispatcher)) {
+            $this->eventDispatcher->dispatch(new MoneyTransferred(
+                payeeId: $payeeId,
+                amount: $amount
+            ));
+        }
 
     }
 }
