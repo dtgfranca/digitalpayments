@@ -11,7 +11,7 @@ As principais ferramentas utilizadas no desenvolvimento deste projeto foram:
 - **[L5-Swagger](https://github.com/DarkaOnline/L5-Swagger)**: Integração do Swagger/OpenAPI para documentação interativa da API.
 - **[PHPUnit](https://phpunit.de/)**: Framework de testes para garantir a qualidade e o funcionamento do código.
 - **[Docker & Docker Compose](https://www.docker.com/)**: Utilizados para a containerização da aplicação, facilitando o ambiente de desenvolvimento local.
-- **MySQL**: Banco de dados relacional utilizado para persistência dos dados.
+- **SQLite**: Banco de dados relacional utilizado para persistência dos dados.
 
 ## Estrutura de Pastas
 
