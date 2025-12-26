@@ -1,0 +1,49 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: digital-payments-app
+    container_name: digital-payments-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    networks:
+      - digital-payments-network
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: digital-payments-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-laravel}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-laravel}
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - digital-payments-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: digital-payments-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - digital-payments-network
+
+networks:
+  digital-payments-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
