@@ -79,8 +79,15 @@ Por esse motivo, eventualmente esses testes podem apresentar comportamento flaky
 Essa decisão foi tomada para manter o cenário de testes o mais próximo possível de um ambiente real de integração.  
 Os testes unitários e de integração interna, por outro lado, não dependem de serviços externos e perma
 
+## Fluxo do Sistema
+
+1. Cadastro do usuário como **Regular** ou **Merchant**
+2. Login com email e senha
+3. Recebimento do token JWT
+4. Uso do token para consultar saldo, realizar depósitos e transferências
+
 ## Arquitetura
 
 As decisões técnicas e arquiteturais deste projeto, incluindo o uso de **Domain-Driven Design (DDD)**, **CQRS**, geração de identificadores fora do banco de dados, padrões de projeto e estratégias de escalabilidade, estão documentadas no arquivo abaixo:
 
-➡️ **[Architecture & Decisions](./architecture.md)**
+➡️ **[Architecture & Decisions](./ARCHITECTURE.md)**

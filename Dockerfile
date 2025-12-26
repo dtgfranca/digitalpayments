@@ -1,45 +1,25 @@
 FROM php:8.2-fpm
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    libzip-dev \
-    sudo
+    git unzip libsqlite3-dev sqlite3 \
+    libpng-dev libonig-dev libxml2-dev zip curl \
+    && docker-php-ext-install pdo pdo_sqlite mbstring bcmath
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
-
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Set working directory
 WORKDIR /var/www
 
-# Copy existing application directory contents
-COPY . /var/www
+COPY composer.json composer.lock ./
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Copy existing application directory permissions
-COPY --chown=www-data:www-data . /var/www
+COPY . .
 
-# Change current user to root to install entrypoint and set permissions
-USER root
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage bootstrap/cache
 
-# Copy entrypoint script
-COPY docker/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN cp .env.example .env || true \
+    && php artisan key:generate \
+    && touch database/database.sqlite
 
-# Change current user back to www-data
-USER www-data
-
-# Expose port 9000 and start php-fpm server
 EXPOSE 9000
-ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["php-fpm"]
