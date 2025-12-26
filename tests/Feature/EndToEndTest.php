@@ -81,20 +81,31 @@ class EndToEndTest extends TestCase
 
     public function test_merchant_cannot_transfer()
     {
+        //create customer
+        $customer = $this->postJson('/api/customers', [
+            'fullname' => 'Joao victor',
+            'email' => 'victor@example.com',
+            'document' => '62382987073',
+            'password' => 'password123',
+            'type' => 'MERCHANT',
+            'balance' => 1000,
+        ]);
+        $customer = Customer::where('email', 'victor@example.com')->first();
         // Create merchant
         $this->postJson('/api/customers', [
             'fullname' => 'Merchant Shop',
-            'email' => 'shop@example.com',
+            'email' => 'shop1@example.com',
             'document' => '00433866012',
             'password' => 'password123',
             'type' => 'MERCHANT',
             'balance' => 1000,
         ]);
-        $merchant = Customer::where('email', 'shop@example.com')->first();
+//        $merchant = Customer::where('email', 'shop1@example.com')->first();
+
 
         // Login
         $response = $this->postJson('/api/auth/login', [
-            'email' => 'shop@example.com',
+            'email' => 'shop1@example.com',
             'password' => 'password123',
         ]);
         $token = $response->json('access_token');
@@ -102,7 +113,7 @@ class EndToEndTest extends TestCase
         // Try transfer
         $response = $this->withHeaders(['Authorization' => "Bearer $token"])
             ->postJson('/api/transfers', [
-                'payee_id' => Uuid::generate()->value(), // random payee
+                'payee_id' => $customer->id,
                 'amount' => 100,
             ]);
 
