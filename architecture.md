@@ -1,4 +1,4 @@
-## 📐 Decisões Técnicas e Arquiteturais
+##  Decisões Técnicas e Arquiteturais
 
 Este projeto foi desenvolvido com base nos princípios de Domain-Driven Design (DDD). A escolha dessa arquitetura surgiu após a análise da complexidade da principal regra de negócio do sistema: a transferência de valores.
 
@@ -12,7 +12,7 @@ Cada subdomínio foi organizado em seu próprio Bounded Context, permitindo uma 
 
 ---
 
-## 🏗️ Arquitetura e Organização
+##  Arquitetura e Organização
 
 A arquitetura foi escolhida justamente para lidar com regras de negócio mais complexas, como validações de saldo, autorização de transferências, controle de estados da transação e possíveis falhas no processo.  
 O uso de DDD ajudou a manter o domínio expressivo, evitando lógica espalhada em camadas técnicas.
@@ -25,7 +25,7 @@ Durante o desenvolvimento, foram aplicados alguns padrões de projeto, com foco 
 
 ---
 
-## 🔀 CQRS (Command Query Responsibility Segregation)
+##  CQRS (Command Query Responsibility Segregation)
 
 Neste projeto, foram aplicados os princípios de CQRS de forma simples e pragmática.
 
@@ -43,7 +43,7 @@ O CQRS foi adotado como um princípio arquitetural, e não como uma implementaç
 
 ---
 
-## 🆔 Geração de Identificadores Fora do Banco de Dados
+## Geração de Identificadores Fora do Banco de Dados
 
 Outra decisão arquitetural importante foi a geração dos identificadores das entidades fora do banco de dados, sem depender de IDs auto-incrementais.
 
@@ -58,7 +58,7 @@ Essa decisão contribui diretamente para a escalabilidade do sistema e reduz o a
 
 ---
 
-## 🧩 SOLID e Desacoplamento
+##  SOLID e Desacoplamento
 
 Os princípios do SOLID foram considerados desde o início do projeto.  
 As dependências entre camadas são feitas por meio de interfaces, o que traz benefícios como:
@@ -69,7 +69,7 @@ As dependências entre camadas são feitas por meio de interfaces, o que traz be
 
 ---
 
-## 🧪 Testes
+##  Testes
 
 Os testes foram escritos utilizando PHPUnit, seguindo o padrão GIVEN / WHEN / THEN, o que torna os cenários mais legíveis e próximos da linguagem de negócio.
 
@@ -90,7 +90,7 @@ Essa abordagem garante maior precisão nos cálculos e evita erros de arredondam
 
 ---
 
-## 🚨 Tratamento de Erros
+## Tratamento de Erros
 
 Foram criadas exceções específicas para cada tipo de erro, permitindo um tratamento mais claro e previsível das falhas, tanto no domínio quanto nas camadas superiores da aplicação.
 
