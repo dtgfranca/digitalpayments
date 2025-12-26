@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TransferController;
+use App\Http\Controllers\WalletBalanceController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,9 @@ Route::group(['prefix' => 'auth'], function () {
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/wallet/deposit', [WalletController::class, 'deposit']);
     Route::post('/transfers', [TransferController::class, 'transfer']);
+
+    Route::get(
+        '/wallets/{userId}/balance',
+        WalletBalanceController::class
+    );
 });

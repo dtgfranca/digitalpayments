@@ -62,7 +62,6 @@ class CreateUserTest extends TestCase
 
     public function test_should_throw_exception_when_document_already_exists(): void
     {
-        // TODO:: remove o password
 
         // GIVEN
         \App\Models\Customer::factory()->create([

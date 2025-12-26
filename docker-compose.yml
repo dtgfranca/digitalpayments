@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
     image: digital-payments-app
     container_name: digital-payments-app
+    user: "0:0"
     restart: unless-stopped
     working_dir: /var/www
     volumes:
