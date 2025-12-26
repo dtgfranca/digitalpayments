@@ -9,10 +9,12 @@ class CustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fullname' => ['required'],
+            'fullname' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:254'],
-            'password' => ['required'],
-            'type' => ['required'],
+            'document' => ['required', 'string', 'max:20'],
+            'password' => ['required', 'string', 'min:6'],
+            'type' => ['required', 'string', 'in:REGULAR,MERCHANT'],
+            'balance' => ['required', 'integer', 'min:0'],
         ];
     }
 

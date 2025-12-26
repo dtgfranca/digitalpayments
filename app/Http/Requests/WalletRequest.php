@@ -9,8 +9,7 @@ class WalletRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => ['required', 'integer'],
-            'balance' => ['required', 'integer'],
+            'amount' => ['required', 'integer', 'min:1'],
         ];
     }
 

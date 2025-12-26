@@ -37,6 +37,24 @@ class Customer extends UserRegular
         );
     }
 
+    public static function restore(
+        Uuid $uuid,
+        string $fullname,
+        Cpf $document,
+        Email $email,
+        Wallet $wallet,
+        UserType $type
+    ): self {
+        return new self(
+            uuid: $uuid,
+            fullname: $fullname,
+            document: $document,
+            email: $email,
+            wallet: $wallet,
+            type: $type
+        );
+    }
+
     public function getUuid(): Uuid
     {
         return $this->uuid;

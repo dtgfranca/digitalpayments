@@ -55,7 +55,7 @@ class TransferMoney
         } catch (InsuficientFundsException $e) {
             $this->transactionManger->rollback();
             throw $e;
-        } catch (\Throwable $e) {
+        } catch (\Throwable $e) {dd($e->getMessage());
             $this->transactionManger->rollback();
             $payer->wallet()->restore($payerMemento);
             $payee->wallet()->restore($payeeMemento);

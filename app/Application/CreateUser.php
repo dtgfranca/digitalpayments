@@ -25,7 +25,7 @@ class CreateUser
         try {
             $this->userRepository->save($data);
         } catch (\Throwable $e) {
-            throw new \Exception('Error creating user');
+            throw new \Exception('Error creating user: ' . $e->getMessage());
         }
 
     }

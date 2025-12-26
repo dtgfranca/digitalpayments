@@ -9,9 +9,8 @@ class TranferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payer_id' => ['required'],
-            'payee_id' => ['required'],
-            'amount' => ['required'],
+            'payee_id' => ['required', 'string'],
+            'amount' => ['required', 'integer', 'min:1'],
         ];
     }
 
