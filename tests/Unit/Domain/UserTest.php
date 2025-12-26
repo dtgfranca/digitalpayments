@@ -74,7 +74,7 @@ class UserTest extends TestCase
         );
 
         // THEN
-        $this->assertEquals(50.0, $user->balance());
+        $this->assertEquals(5000, $user->balance());
     }
 
     public function test_should_accept_a_valid_cpf(): void

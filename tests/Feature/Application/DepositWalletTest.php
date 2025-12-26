@@ -43,7 +43,7 @@ class DepositWalletTest extends TestCase
         // THEN
         $this->assertDatabaseHas('wallets', [
             'customer_id' => $customer->id,
-            'balance' => 150,
+            'balance' => 15000,
         ]);
 
 
