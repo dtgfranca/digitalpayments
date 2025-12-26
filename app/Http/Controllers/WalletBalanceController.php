@@ -12,22 +12,13 @@ class WalletBalanceController extends Controller
     ) {}
     /**
      * @OA\Get(
-     *     path="/api/wallets/{userId}/balance",
+     *     path="/api/wallets/balance",
+     *     security={{"bearerAuth":{}}},
      *     tags={"Wallet"},
      *     summary="Get user wallet balance",
      *     description="Returns the current balance of the user's wallet. This is a read-only operation (Query) and does not modify any system state.",
      *     operationId="getWalletBalance",
      *
-     *     @OA\Parameter(
-     *         name="userId",
-     *         in="path",
-     *         required=true,
-     *         description="User identifier",
-     *         @OA\Schema(
-     *             type="string",
-     *             example="c1a9b2e4-7f12-4a88-9c01-9bdeff123456"
-     *         )
-     *     ),
      *
      *     @OA\Response(
      *         response=200,
@@ -70,7 +61,7 @@ class WalletBalanceController extends Controller
         $balance = $this->getWalletBalance->execute(Auth::guard('api')->id());
 
         return response()->json([
-            'user_id' => $balance->userId,
+            'user_id' => $balance->customer_id,
             'balance' => $balance->balance / 100
         ]);
     }

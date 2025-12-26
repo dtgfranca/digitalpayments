@@ -2,14 +2,16 @@
 
 namespace App\Application;
 
+use App\Domain\Wallet\WalletBalanceReadRepositoryInterface;
+
 class GetWalletBalance
 {
     public function __construct(
-        private WalletBalanceReadRepository $repository
+        private WalletBalanceReadRepositoryInterface $repository
     ) {}
 
-    public function execute(string $userId): WalletBalanceView
+    public function execute(string $userId)
     {
-        return $this->repository->getByUserId($userId);
+        return $this->repository->getBalance($userId);
     }
 }

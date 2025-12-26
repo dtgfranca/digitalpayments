@@ -241,6 +241,54 @@
                 ]
             }
         },
+        "/api/wallets/balance": {
+            "get": {
+                "tags": [
+                    "Wallet"
+                ],
+                "summary": "Get user wallet balance",
+                "description": "Returns the current balance of the user's wallet. This is a read-only operation (Query) and does not modify any system state.",
+                "operationId": "getWalletBalance",
+                "responses": {
+                    "200": {
+                        "description": "Wallet balance retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user_id": {
+                                            "type": "string",
+                                            "example": "c1a9b2e4-7f12-4a88-9c01-9bdeff123456"
+                                        },
+                                        "balance": {
+                                            "description": "Available wallet balance",
+                                            "type": "number",
+                                            "format": "float",
+                                            "example": 150.75
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Wallet not found for the given user"
+                    },
+                    "401": {
+                        "description": "Unauthenticated user"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/wallet/deposit": {
             "post": {
                 "tags": [

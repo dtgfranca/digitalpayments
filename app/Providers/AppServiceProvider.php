@@ -7,10 +7,12 @@ use App\Domain\Transfer\AuthorizerInterface;
 use App\Domain\Transfer\NotifyerInterface;
 use App\Domain\Transfer\TransactionMangerInterface;
 use App\Domain\Transfer\TransferRepositoryInterface;
+use App\Domain\Wallet\WalletBalanceReadRepositoryInterface;
 use App\Infrastructure\Authorizer\AuthorizerAdapter;
 use App\Infrastructure\Notifier\NotifierAdapter;
 use App\Infrastructure\Persistence\Eloquent\CustomerRepository;
 use App\Infrastructure\Persistence\Eloquent\TransferRepository;
+use App\Infrastructure\Persistence\Eloquent\WalletBalanceReadRepository;
 use App\Infrastructure\Persistence\LaravelManagerTransaction;
 use Illuminate\Support\ServiceProvider;
 
@@ -42,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
             TransactionMangerInterface::class,
             LaravelManagerTransaction::class
         );
+        $this->app->bind(WalletBalanceReadRepositoryInterface::class, WalletBalanceReadRepository::class);
     }
 
     /**

@@ -19,7 +19,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/transfers', [TransferController::class, 'transfer']);
 
     Route::get(
-        '/wallets/{userId}/balance',
+        '/wallets/balance',
         WalletBalanceController::class
     );
 });
