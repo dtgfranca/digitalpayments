@@ -9,27 +9,28 @@ class Wallet
 {
     private int $balance;
     public function __construct(private  Amount $amount) {
-        $this->balance = $amount->toFloat();
+        $this->balance = $amount->value();
     }
 
     public function balance(): float
     {
-        return $this->balance;
+
+        return $this->balance ;
     }
     private function subtract(Amount $amount):void
     {
-       $this->balance =  $this->amount->toFloat() - $amount->toFloat();
+       $this->balance =  $this->amount->value() - $amount->value();
 
     }
     private function add(Amount $amount):void
     {
-        $this->balance = $this->amount->toFloat() + $amount->toFloat();
+        $this->balance = $this->amount->value() + $amount->value();
 
     }
     public function debit(Amount $amount): void
     {
 
-        if($this->balance < $amount->toFloat()) {
+        if($this->balance < $amount->value()) {
             throw new InsuficientFundsException('Insufficient funds');
         }
         $this->subtract($amount);

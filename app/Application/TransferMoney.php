@@ -3,6 +3,7 @@
 namespace App\Application;
 
 use App\Application\DTO\TransferOutputDTO;
+use App\Domain\Customer\CustomerRepositoryInterface;
 use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\Exceptions\ProcessTransferFailedException;
 use App\Domain\Exceptions\TransferNotAllowedException;
@@ -21,7 +22,8 @@ class TransferMoney
         private readonly AuthorizerInterface $authorizer,
         private readonly NotifyerInterface $notifyer,
         private readonly TransferRepositoryInterface $transferRepository,
-        private readonly TransactionMangerInterface $transactionManger
+        private readonly TransactionMangerInterface $transactionManger,
+        private readonly CustomerRepositoryInterface $customerRepository,
     )
     {
 
@@ -46,6 +48,8 @@ class TransferMoney
             );
             $transfer->commit();
             $this->transferRepository->save(TransferOutputDTO::fromTransfer($transfer)->toArray());
+            $this->customerRepository->saveBalance($payer->wallet()->balance(), $payer->getUuid()->value());
+            $this->customerRepository->saveBalance($payee->wallet()->balance(), $payee->getUuid()->value());
             $this->notifyer->notify($payee);
             $this->transactionManger->commit();
         }catch (InsuficientFundsException $e){

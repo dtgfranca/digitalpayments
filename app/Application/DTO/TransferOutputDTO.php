@@ -8,8 +8,8 @@ class TransferOutputDTO
 {
     public function __construct(
         public string $id,
-        public string $payerId,
-        public string $payeeId,
+        public string $payer_id,
+        public string $payee_id,
         public int $amount
     ) {}
 
@@ -18,8 +18,8 @@ class TransferOutputDTO
 
         return new self(
             id: $transfer->id()->value(),
-            payerId: $transfer->payer()->getUuid()->value(),
-            payeeId: $transfer->payee()->getUuid()->value(),
+            payer_id: $transfer->payer()->getUuid()->value(),
+            payee_id: $transfer->payee()->getUuid()->value(),
             amount: $transfer->amount()->value()
         );
     }

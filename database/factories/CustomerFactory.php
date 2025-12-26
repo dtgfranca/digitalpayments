@@ -16,6 +16,7 @@ class CustomerFactory extends Factory
         return [
             'id'=>Uuid::generate(),
             'fullname' => $this->faker->word(),
+            'document' => $this->faker->randomNumber(),
             'email' => $this->faker->unique()->safeEmail(),
             'password' => bcrypt($this->faker->password()),
             'type' => UserType::REGULAR,
