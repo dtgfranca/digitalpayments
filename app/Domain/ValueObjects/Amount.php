@@ -16,11 +16,13 @@ class Amount
     {
         return new self((int) round($value * 100));
     }
+
     public static function toCents(float $value): int
     {
-        if (!preg_match('/^\d+(\.\d{1,2})?$/', $value)) {
+        if (! preg_match('/^\d+(\.\d{1,2})?$/', $value)) {
             throw new \InvalidArgumentException('Invalid money format');
         }
+
         return (int) round($value * 100);
     }
 

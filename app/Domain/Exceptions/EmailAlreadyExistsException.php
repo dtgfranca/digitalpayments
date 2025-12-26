@@ -2,7 +2,4 @@
 
 namespace App\Domain\Exceptions;
 
-class EmailAlreadyExistsException extends \Exception
-{
-
-}
+class EmailAlreadyExistsException extends \Exception {}

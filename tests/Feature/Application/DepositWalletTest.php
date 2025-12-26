@@ -3,7 +3,6 @@
 namespace Tests\Feature\Application;
 
 use App\Application\DepositWallet;
-use App\Domain\Customer\CustomerRepositoryInterface;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Uuid;
 use App\Models\Customer;
@@ -14,6 +13,7 @@ use Tests\TestCase;
 class DepositWalletTest extends TestCase
 {
     use RefreshDatabase;
+
     public function test_should_deposit_money_in_wallet()
     {
 
@@ -46,7 +46,6 @@ class DepositWalletTest extends TestCase
             'balance' => 15000,
         ]);
 
-
     }
 
     public function test_should_throw_exception_when_customer_not_found(): void
@@ -63,22 +62,23 @@ class DepositWalletTest extends TestCase
         // WHEN
         $useCase->execute($nonExistentId, $amount);
     }
+
     public function test_should_return_throw_wallet_exception_when_deposit_fails(): void
     {
         // GIVEN
         $customer = \App\Models\Customer::factory()->create([
-            'id'=>Uuid::generate(),
+            'id' => Uuid::generate(),
             'document' => '34067941064',
-            'fullname'=>'Diego franca',
-            'email'=>'teste@gmail.com',
-            'password' => 'asdfadf'
+            'fullname' => 'Diego franca',
+            'email' => 'teste@gmail.com',
+            'password' => 'asdfadf',
         ]);
 
         $amount = new \App\Domain\ValueObjects\Amount(1000);
 
         // Simulamos que, ao tentar salvar o saldo, algo no domínio/repositório lança uma WalletException
         $this->instance(\App\Domain\Customer\CustomerRepositoryInterface::class, \Mockery::mock(\App\Domain\Customer\CustomerRepositoryInterface::class, function ($mock) use ($customer) {
-            $mock->shouldReceive('findById')->with($customer->id)->andThrow(new \App\Domain\Exceptions\WalletException('Invalid wallet operation'));;
+            $mock->shouldReceive('findById')->with($customer->id)->andThrow(new \App\Domain\Exceptions\WalletException('Invalid wallet operation'));
         })->makePartial());
 
         $useCase = app(\App\Application\DepositWallet::class);
@@ -90,6 +90,4 @@ class DepositWalletTest extends TestCase
         // WHEN
         $useCase->execute($customer->id, $amount);
     }
-
-
 }

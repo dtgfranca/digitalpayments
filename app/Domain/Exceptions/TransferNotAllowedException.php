@@ -2,7 +2,4 @@
 
 namespace App\Domain\Exceptions;
 
-class TransferNotAllowedException extends \Exception
-{
-
-}
+class TransferNotAllowedException extends \Exception {}

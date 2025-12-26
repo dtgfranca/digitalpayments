@@ -25,17 +25,17 @@ class CreateUserTest extends TestCase
      */
     private mixed $userCase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->userCase = app(CreateUser::class);
     }
 
-    public function test_should_create_a_user():void
+    public function test_should_create_a_user(): void
     {
 
-        //GIVEN
-        $user  = Customer::create(
+        // GIVEN
+        $user = Customer::create(
             fullname: 'Diego franca',
             document: new Cpf('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -43,35 +43,36 @@ class CreateUserTest extends TestCase
             type: UserType::REGULAR
         );
 
-        //WHEN
+        // WHEN
         $data = $user->toArray();
         $data['password'] = 'teste';
         $this->userCase->execute($data);
 
-        //THEN
+        // THEN
         $this->assertDatabaseHas('customers', [
             'fullname' => 'Diego franca',
             'document' => '34067941064',
-            'email' => 'diego.tg.franca@gmail.com'
+            'email' => 'diego.tg.franca@gmail.com',
         ]);
         $this->assertDatabaseHas('wallets', [
             'balance' => 0,
-            'customer_id' => $data['id']
+            'customer_id' => $data['id'],
         ]);
     }
+
     public function test_should_throw_exception_when_document_already_exists(): void
     {
-        //TODO:: remove o password
+        // TODO:: remove o password
 
         // GIVEN
         \App\Models\Customer::factory()->create([
-            'id'=>Uuid::generate(),
+            'id' => Uuid::generate(),
             'document' => '34067941064',
-            'fullname'=>'Diego franca',
-            'email'=>'teste@gmail.com',
-            'password' => 'asdfadf'
+            'fullname' => 'Diego franca',
+            'email' => 'teste@gmail.com',
+            'password' => 'asdfadf',
         ]);
-        $user  = Customer::create(
+        $user = Customer::create(
             fullname: 'Diego franca',
             document: new Cpf('34067941064'),
             email: new Email('diego.tg.franca@gmail.com'),
@@ -85,6 +86,7 @@ class CreateUserTest extends TestCase
         // WHEN
         $this->userCase->execute($data);
     }
+
     public function test_should_throw_generic_exception_when_repository_fails(): void
     {
         // GIVEN
@@ -114,5 +116,4 @@ class CreateUserTest extends TestCase
         \Mockery::close();
         parent::tearDown();
     }
-
 }

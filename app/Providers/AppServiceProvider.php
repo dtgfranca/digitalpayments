@@ -11,7 +11,6 @@ use App\Infrastructure\Authorizer\AuthorizerAdapter;
 use App\Infrastructure\Notifier\NotifierAdapter;
 use App\Infrastructure\Persistence\Eloquent\CustomerRepository;
 use App\Infrastructure\Persistence\Eloquent\TransferRepository;
-use App\Infrastructure\Persistence\Eloquent\UserRepository;
 use App\Infrastructure\Persistence\LaravelManagerTransaction;
 use Illuminate\Support\ServiceProvider;
 

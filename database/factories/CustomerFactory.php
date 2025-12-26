@@ -14,7 +14,7 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'=>Uuid::generate(),
+            'id' => Uuid::generate(),
             'fullname' => $this->faker->word(),
             'document' => $this->faker->randomNumber(),
             'email' => $this->faker->unique()->safeEmail(),

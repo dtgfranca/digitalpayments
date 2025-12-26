@@ -62,9 +62,9 @@ final class Cpf
 
     public function formatted(): string
     {
-        return substr($this->value, 0, 3) . '.' .
-            substr($this->value, 3, 3) . '.' .
-            substr($this->value, 6, 3) . '-' .
+        return substr($this->value, 0, 3).'.'.
+            substr($this->value, 3, 3).'.'.
+            substr($this->value, 6, 3).'-'.
             substr($this->value, 9, 2);
     }
 
@@ -77,5 +77,4 @@ final class Cpf
     {
         return $this->formatted();
     }
-
 }

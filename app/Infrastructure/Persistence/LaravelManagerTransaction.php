@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class LaravelManagerTransaction implements TransactionMangerInterface
 {
-
     public function begin(): void
     {
         DB::beginTransaction();

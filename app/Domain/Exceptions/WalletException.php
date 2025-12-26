@@ -2,7 +2,4 @@
 
 namespace App\Domain\Exceptions;
 
-class WalletException extends \Exception
-{
-
-}
+class WalletException extends \Exception {}

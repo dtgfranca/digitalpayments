@@ -9,7 +9,6 @@ use App\Models\Wallet;
 
 class CustomerRepository implements CustomerRepositoryInterface
 {
-
     public function findByEmail(string $email): ?string
     {
         return Customer::where('email', $email)->select('email')->first();
@@ -22,7 +21,7 @@ class CustomerRepository implements CustomerRepositoryInterface
 
     public function findById(string $id): ?Customer
     {
-         return Customer::where('id', $id)->first();
+        return Customer::where('id', $id)->first();
     }
 
     public function save(array $data): void
@@ -32,14 +31,13 @@ class CustomerRepository implements CustomerRepositoryInterface
         Wallet::create([
             'id' => Uuid::generate(),
             'customer_id' => $customer->id,
-            'balance' => $data['balance']
+            'balance' => $data['balance'],
         ]);
-
 
     }
 
     public function saveBalance(int $amount, string $userId): void
     {
-        Wallet::where('customer_id', $userId)->update(['balance'=> $amount]);
+        Wallet::where('customer_id', $userId)->update(['balance' => $amount]);
     }
 }

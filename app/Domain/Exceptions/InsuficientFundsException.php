@@ -2,7 +2,4 @@
 
 namespace App\Domain\Exceptions;
 
-class InsuficientFundsException extends \Exception
-{
-
-}
+class InsuficientFundsException extends \Exception {}

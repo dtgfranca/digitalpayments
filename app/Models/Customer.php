@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Customer extends Model
 {
     use HasFactory;
+
     public $incrementing = false;
+
     protected $keyType = 'string';
+
     protected $fillable = [
         'id',
         'fullname',
@@ -24,8 +27,6 @@ class Customer extends Model
     {
         return $this->hasOne(Wallet::class, 'customer_id', 'id');
     }
-
-
 
     protected function casts(): array
     {

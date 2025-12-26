@@ -18,9 +18,12 @@ class AuthorizerAdapter implements AuthorizerInterface
                 'Accept' => 'application/json',
             ])->retry(3)->timeout(10)->get('https://util.devi.tools/api/v2/authorize');
             $body = $this->getContents($response);
-            if($body['data']['authorization']) return true;
+            if ($body['data']['authorization']) {
+                return true;
+            }
+
             return false;
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception('Error processing authorization');
         }
     }

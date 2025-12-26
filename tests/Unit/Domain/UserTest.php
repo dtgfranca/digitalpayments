@@ -5,9 +5,7 @@ namespace Tests\Unit\Domain;
 use App\Domain\Customer\Customer;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
-use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
-use App\Domain\ValueObjects\Uuid;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\Wallet\Wallet;
 use PHPUnit\Framework\TestCase;
@@ -20,12 +18,12 @@ class UserTest extends TestCase
         $email = new Email($emailStr);
         $this->assertEquals($emailStr, $email->value());
     }
+
     public function test_should_throw_exception_for_invalid_email(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         new Email('email-invalido');
     }
-
 
     public function test_regular_user_can_send_money(): void
     {
@@ -88,6 +86,7 @@ class UserTest extends TestCase
         // THEN
         $this->assertEquals($validCpf, $document->value());
     }
+
     public function test_should_accept_cpf_with_formatting_and_sanitize(): void
     {
         // GIVEN
@@ -110,9 +109,4 @@ class UserTest extends TestCase
         // WHEN (CPF com último dígito errado)
         new Cpf('07634403695');
     }
-
-
-
-
-
 }

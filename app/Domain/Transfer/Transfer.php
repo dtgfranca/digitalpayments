@@ -9,12 +9,13 @@ use App\Domain\ValueObjects\Uuid;
 class Transfer
 {
     private function __construct(
-        private Uuid     $id,
+        private Uuid $id,
         private Customer $payer,
         private Customer $payee,
-        private Amount   $amount,
+        private Amount $amount,
 
     ) {}
+
     public function id(): Uuid
     {
         return $this->id;
@@ -34,6 +35,7 @@ class Transfer
     {
         return $this->amount;
     }
+
     public static function create(Customer $payer, Customer $payee, Amount $amount): self
     {
         return new self(
@@ -43,11 +45,11 @@ class Transfer
             $amount
         );
     }
+
     public function commit(): void
     {
         $this->payer->wallet()->debit($this->amount);
         $this->payee->wallet()->credit($this->amount);
 
     }
-
 }

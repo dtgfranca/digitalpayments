@@ -8,10 +8,10 @@ use Illuminate\Support\ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
 {
-
     protected $listen = [
-        MoneyTransferred::class=>[SendPaymentNotification::class],
+        MoneyTransferred::class => [SendPaymentNotification::class],
     ];
+
     /**
      * Register services.
      */

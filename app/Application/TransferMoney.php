@@ -3,18 +3,16 @@
 namespace App\Application;
 
 use App\Application\DTO\TransferOutputDTO;
+use App\Domain\Customer\Customer;
 use App\Domain\Customer\CustomerRepositoryInterface;
 use App\Domain\Exceptions\InsuficientFundsException;
 use App\Domain\Exceptions\ProcessTransferFailedException;
 use App\Domain\Exceptions\TransferNotAllowedException;
 use App\Domain\Transfer\AuthorizerInterface;
-use App\Domain\Transfer\NotifyerInterface;
-use App\Domain\Transfer\Transfer;
 use App\Domain\Transfer\TransactionMangerInterface;
+use App\Domain\Transfer\Transfer;
 use App\Domain\Transfer\TransferRepositoryInterface;
-use App\Domain\Customer\Customer;
 use App\Domain\ValueObjects\Amount;
-use App\Domain\ValueObjects\UserType;
 use App\Events\MoneyTransferred;
 use Illuminate\Contracts\Events\Dispatcher;
 
@@ -26,23 +24,20 @@ class TransferMoney
         private readonly TransferRepositoryInterface $transferRepository,
         private readonly TransactionMangerInterface $transactionManger,
         private readonly CustomerRepositoryInterface $customerRepository,
-    )
-    {
-
-    }
+    ) {}
 
     public function execute(Customer $payer, Customer $payee, Amount $amount): void
     {
-        if(!$payer->canSendMoney()) {
+        if (! $payer->canSendMoney()) {
             throw new TransferNotAllowedException('Merchant profiles cannot make transfers, only receive them.');
         }
-        if(!$this->authorizer->authorize()){
+        if (! $this->authorizer->authorize()) {
             throw new TransferNotAllowedException('Transfer not allowed.');
         }
         $payerMemento = $payer->wallet()->createMemento();
         $payeeMemento = $payee->wallet()->createMemento();
         $this->transactionManger->begin();
-        try{
+        try {
             $transfer = Transfer::create(
                 payer: $payer,
                 payee: $payee,
@@ -57,23 +52,21 @@ class TransferMoney
                 amount: $amount->value()
             );
             $this->transactionManger->commit();
-        }catch (InsuficientFundsException $e){
+        } catch (InsuficientFundsException $e) {
             $this->transactionManger->rollback();
             throw $e;
-        }
-        catch (\Throwable $e){
+        } catch (\Throwable $e) {
             $this->transactionManger->rollback();
             $payer->wallet()->restore($payerMemento);
             $payee->wallet()->restore($payeeMemento);
             throw new ProcessTransferFailedException('Error processing transfer');
         }
 
-
     }
 
-    private function dispatch( string $payeeId, int $amount):void
+    private function dispatch(string $payeeId, int $amount): void
     {
-        if (!empty($this->eventDispatcher)) {
+        if (! empty($this->eventDispatcher)) {
             $this->eventDispatcher->dispatch(new MoneyTransferred(
                 payeeId: $payeeId,
                 amount: $amount

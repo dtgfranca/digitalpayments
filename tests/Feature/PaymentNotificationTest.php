@@ -11,12 +11,12 @@ class PaymentNotificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testBasic()
+    public function test_basic()
     {
         // GIVEN
         Http::fake([
             'https://util.devi.tools/api/v1/notify' => Http::response([
-                'success' => true
+                'success' => true,
             ], 200),
         ]);
         $customer = \App\Models\Customer::factory()->create();
@@ -29,7 +29,7 @@ class PaymentNotificationTest extends TestCase
         event($event);
 
         // THEN
-        Http::assertSent(function ($request) use($customer){
+        Http::assertSent(function ($request) use ($customer) {
             return $request->url() === 'https://util.devi.tools/api/v1/notify'
                 && $request->method() === 'POST'
                 && $request['amount'] === 150.0

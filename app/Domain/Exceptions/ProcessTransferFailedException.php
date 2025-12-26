@@ -2,7 +2,4 @@
 
 namespace App\Domain\Exceptions;
 
-class ProcessTransferFailedException extends \Exception
-{
-
-}
+class ProcessTransferFailedException extends \Exception {}

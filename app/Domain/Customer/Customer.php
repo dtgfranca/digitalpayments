@@ -2,24 +2,20 @@
 
 namespace App\Domain\Customer;
 
-use App\Domain\Exceptions\InsuficientFundsException;
-use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\Cpf;
-use App\Domain\ValueObjects\Document;
 use App\Domain\ValueObjects\Email;
-use App\Domain\ValueObjects\Uuid;
 use App\Domain\ValueObjects\UserType;
+use App\Domain\ValueObjects\Uuid;
 use App\Domain\Wallet\Wallet;
-
 
 class Customer extends UserRegular
 {
     private function __construct(
-        private readonly Uuid     $uuid,
-        private readonly string   $fullname,
-        private readonly Cpf      $document,
-        private readonly Email    $email,
-        private readonly Wallet   $wallet,
+        private readonly Uuid $uuid,
+        private readonly string $fullname,
+        private readonly Cpf $document,
+        private readonly Email $email,
+        private readonly Wallet $wallet,
         private readonly UserType $type
 
     ) {}
@@ -76,27 +72,31 @@ class Customer extends UserRegular
 
         return $this->wallet->balance();
     }
+
     public function getTypeUser(): string
     {
         return $this->type->value;
     }
+
     public function canSendMoney(): bool
     {
         return $this->getTypeUser() !== UserType::MERCHANT->value;
     }
+
     public function wallet(): Wallet
     {
         return $this->wallet;
     }
+
     public function toArray(): array
     {
         return [
-            'id'       => $this->uuid->value(),
+            'id' => $this->uuid->value(),
             'fullname' => $this->fullname,
-            'email'    => $this->email->value(),
+            'email' => $this->email->value(),
             'document' => $this->document->value(),
-            'type'     => $this->type->value,
-            'balance'  => $this->wallet->balance(),
+            'type' => $this->type->value,
+            'balance' => $this->wallet->balance(),
         ];
     }
 }

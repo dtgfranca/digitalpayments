@@ -13,7 +13,7 @@ class WalletFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'=> Uuid::generate(),
+            'id' => Uuid::generate(),
             'customer_id' => $this->faker->randomNumber(),
             'balance' => $this->faker->randomNumber(),
         ];
