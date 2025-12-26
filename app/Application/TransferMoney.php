@@ -15,6 +15,7 @@ use App\Domain\Transfer\TransferRepositoryInterface;
 use App\Domain\Customer\Customer;
 use App\Domain\ValueObjects\Amount;
 use App\Domain\ValueObjects\UserType;
+use App\Events\MoneyTransferred;
 
 class TransferMoney
 {
@@ -50,7 +51,10 @@ class TransferMoney
             $this->transferRepository->save(TransferOutputDTO::fromTransfer($transfer)->toArray());
             $this->customerRepository->saveBalance($payer->wallet()->balance(), $payer->getUuid()->value());
             $this->customerRepository->saveBalance($payee->wallet()->balance(), $payee->getUuid()->value());
-            $this->notifyer->notify($payee);
+            event(new MoneyTransferred(
+                payeeId: $payee->getUuid()->value(),
+                amount: $amount->value()
+            ));
             $this->transactionManger->commit();
         }catch (InsuficientFundsException $e){
             $this->transactionManger->rollback();

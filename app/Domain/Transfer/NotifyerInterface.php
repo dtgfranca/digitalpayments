@@ -6,5 +6,5 @@ use App\Domain\Customer\Customer;
 
 interface NotifyerInterface
 {
-    public function notify(Customer $payee): void;
+    public function notify(string $email, string $phone, int $amount): void;
 }
