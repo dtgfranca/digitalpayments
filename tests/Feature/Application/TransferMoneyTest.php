@@ -13,6 +13,7 @@ use App\Domain\ValueObjects\Cpf;
 use App\Domain\ValueObjects\Email;
 use App\Domain\ValueObjects\UserType;
 use App\Domain\ValueObjects\Uuid;
+use App\Events\MoneyTransferred;
 use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,6 +23,11 @@ use Tests\TestCase;
 class TransferMoneyTest extends TestCase
 {
     use RefreshDatabase;
+    public function setUp(): void
+    {
+        parent::setUp();
+        \Event::fake();
+    }
 
     public function test_should_execute_transfer_successfully(): void
     {
@@ -56,7 +62,7 @@ class TransferMoneyTest extends TestCase
 
         $this->assertEquals(849.50, (new Amount($balancePayer->wallet->balance))->toFloat());
         $this->assertEquals(150.50, (new Amount($balancePayee->wallet->balance))->toFloat());
-
+       \Event::assertDispatched(MoneyTransferred::class);
         $this->assertDatabaseHas('transfers', [
             'payer_id' => $payer->getUuid(),
             'payee_id' => $payee->getUuid(),
